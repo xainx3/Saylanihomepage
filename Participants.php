@@ -134,6 +134,7 @@ else{
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+      
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
@@ -150,232 +151,31 @@ else{
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
-    <!-- /.content-header -->
 
-    <!-- Main content -->
-    <!-- <div class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
 
-                <p class="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's
-                  content.
-                </p>
+    <form method="POST" action="" enctype="multipart/form-data" id="registrationform" class="m-3 p-5 bg-dark rounded">
 
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-              </div>
-            </div>
+    <h1 class="text-center" style="margin: 0 0;">Enter Participant's Details</h1>
 
-            <div class="card card-primary card-outline">
-              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
 
-                <p class="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's
-                  content.
-                </p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-              </div>
-            </div>
-          </div>
-         
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="m-0">Featured</h5>
-              </div>
-              <div class="card-body">
-                <h6 class="card-title">Special title treatment</h6>
 
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-
-            <div class="card card-primary card-outline">
-              <div class="card-header">
-                <h5 class="m-0">Featured</h5>
-              </div>
-              <div class="card-body">
-                <h6 class="card-title">Special title treatment</h6>
-
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-          </div>
-        
-        </div>
-       
-      </div>
-    </div> -->
-    <div id="wizard">
-      <h3>Sample Registration</h3>
-      <section >
-
-      <form method="POST" action="" enctype="multipart/form-data" id="registrationform" class="p-5 bg-dark rounded">
-      <h1 class="text-center" style="margin: 0 0;">Enter Participant's Details</h1>
-
-      <div class="card-body">
-        <div class="row">
-
-      <div class="form-group col-md-6">
-          <label >MR. No</label>
-          <input type="name" class="form-control"  placeholder="Enter MR Number" name="mrno" required>
-        </div>
-
-        <div class="form-group col-md-6">
-          <label for="exampleInputEmail1">Name</label>
-          <input type="name" class="form-control"  placeholder="Enter Full Name" name="name" required>
-        </div>
-
-        <div class="form-group col-md-6">
-          <label for="exampleInputPassword1">Date of Enrollment</label>
-          <input type="date" class="form-control" id="exampleInputPassword1"  name="edate" required>
-        </div>
-
-        <div class="form-group col-md-6">
-          <label for="exampleInputPassword1">Date of Receiving</label>
-          <input type="date" class="form-control" id="exampleInputPassword1" placeholder="Enter age" name="rdate" required>
-        </div>
-        
-
-        <div class="form-group col-md-6">
-                      <label for="exampleInputPassword1">Age</label>
-                      <input type="number" class="form-control" id="exampleInputPassword1"  name="age" required >
-                    </div>
-
-        <div class="form-group">
-          <label for="exampleInputPassword1">Gender</label>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="gender" checked value="MALE">
-            <label class="form-check-label">Male</label>
-          </div>
-
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="gender" value="FEMALE">
-            <label class="form-check-label">Female</label>
-          </div>
-       
-        </div>
-        <div class="form-group col-md-6">
-          <label >Contact</label>
-          <input type="number" class="form-control"  placeholder="Enter Contact Number" name="contact" required>
-        </div>
-        
-          <div class="form-group col-md-6">
-                      <label >Temprature</label>
-                      <input type="name" class="form-control"  placeholder="Temprature of Participant" name="temp"  required >
-                    </div>
-                    <div class="form-group col-md-6 mb-5">
-                      <label >CNIC</label>
-                      <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="cnic" >
-                    </div>
-
-</div>
-      
-  
-
-     
-     
-    </form>
-
-    
-      </section>
-      <h3>Sample Collection</h3>
-      <section>
-<div class=" row p-5 bg-dark rounded"> 
-  
-<div class="col-md-12"> 
-<h1 class="text-center">Collect Patient's Samples</h1>
-</div>
-
-<div class="mx-auto p-5">
-  <form action="#"  id="collectionform">
-
-     
-      <div class="col-md-12">
-    <input type="checkbox" id="blood" name="blood" required/>
-    <label for="test1" >Blood Samples</label>
-    
-
-    <input type="checkbox" id="urine" name="urine" class="ml-2" required/>
-    <label for="test1">Urine Samples</label>
-    
-    </div>
 
 
 </form>
 
+     
+     
+    
 
+    
+      
 
-</div>
-
-<div class="col-md-12">
-
-<button type="button" onclick="printbrc();" class="btn btn-primary btn-lg btn-block btn-h">GENERATE BARCODES</button>
-</div> 
-</div>
-      </section>
     
   </div>
-    <!-- <form method="POST" action="" enctype="multipart/form-data">
-      <div class="card-body">
-        <div class="row">
-      <div class="form-group col-md-6">
-          <label >Full Name</label>
-          <input type="name" class="form-control"  placeholder="Enter Full Name" name="fname" required>
-        </div>
-        <div class="form-group col-md-6">
-          <label for="exampleInputEmail1">MR.</label>
-          <input type="name" class="form-control"  placeholder="Enter MR Number" name="mrno" required>
-        </div>
-        <div class="form-group col-md-6">
-          <label for="exampleInputPassword1">Age</label>
-          <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Enter age" name="age" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="exampleInputPassword1">Gender</label>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="radio1">
-            <label class="form-check-label">Male</label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="radio1" checked="">
-            <label class="form-check-label">Female</label>
-          </div>
-       
-        </div>
-        <div class="form-group col-md-6">
-          <label >Contact</label>
-          <input type="number" class="form-control"  placeholder="Enter Contact Number" name="contact" required>
-        </div>
-        
-        <div class="form-group col-md-6">
-          <label >CPLC</label>
-          <input type="name" class="form-control"  placeholder="Enter CPLC Number" name="cplc" required>
-        </div>
-        </div>
-
-</div>
-      
-     
-
-      <div class="col-md-12 text-center">
-        <button type="submit" class="btn btn-primary btn-block btn-lg" name="update">Submit Details</button>
-      </div>
-     
-    </form> -->
   
   
-  </div>
+  
+  
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">

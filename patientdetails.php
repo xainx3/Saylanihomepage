@@ -214,7 +214,7 @@ while($row1 = mysqli_fetch_array($result1))
                       <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="cnic" >
                     </div>
                        
-                  
+
                     </div>
   
   </div>
@@ -715,7 +715,7 @@ while($row1 = mysqli_fetch_array($result1))
     if (window.history.replaceState) {
       window.history.replaceState(null, null, window.location.href);
     }
- 
+
    
 </script>
 </body>

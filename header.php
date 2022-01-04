@@ -67,11 +67,20 @@
         
           </li>
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="sample.php" class="nav-link <?php if ($thispage == 'sample') {echo  "active"; } ?>">
               <i class=" nav-icon fas fa-vial"></i>
               <p>
                Sample Registration
+              </p>
+            </a>
+          </li> -->
+
+                <li class="nav-item">
+            <a href="Participants.php" class="nav-link <?php if ($thispage == 'prreg') {echo  "active"; } ?>">
+              <i class=" nav-icon fas fa-vial"></i>
+              <p>
+              Participant's Registration
               </p>
             </a>
           </li>
