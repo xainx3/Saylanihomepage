@@ -76,6 +76,7 @@
             </a>
           </li> -->
 
+
                 <li class="nav-item">
             <a href="Participants.php" class="nav-link <?php if ($thispage == 'prreg') {echo  "active"; } ?>">
               <i class=" nav-icon fas fa-vial"></i>
@@ -84,8 +85,10 @@
               </p>
             </a>
           </li>
+    <?php      if($_SESSION['role']!="DE"){
 
-          <li class="nav-item  <?php if ($thispage == 'departs' || $thispage == 'haema' || $thispage == 'mole' || $thispage == 'bio' ) {echo  "menu-is-opening menu-open"; } ?>">
+?>
+         <li class="nav-item  <?php if ($thispage == 'departs' || $thispage == 'haema' || $thispage == 'mole' || $thispage == 'bio' ) {echo  "menu-is-opening menu-open"; } ?>">
             <a href="#" class="nav-link <?php if ($thispage == 'departs' || $thispage == 'haema' || $thispage == 'mole' || $thispage == 'bio' ) {echo  "active"; } ?>">
             <i class="nav-icon far fa-building"></i></i>
               <p>
@@ -121,9 +124,15 @@
               <p>
                 Manage Storage
               </p>
-            </a>
-        
+            </a>        
           </li>
+
+          <?php
+    }
+
+    ?>
+
+
 
           <li class="nav-item <?php if ($thispage == 'profile' || $thispage == 'updatep' || $thispage == 'cpass') {echo  "menu-is-opening menu-open"; } ?>">
             <a href="" class="nav-link <?php if ($thispage == 'profile' || $thispage == 'updatep' || $thispage == 'cpass') {echo  "active"; } ?>">

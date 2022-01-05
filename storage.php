@@ -16,103 +16,49 @@ if(!isset($_SESSION["id"])){
 
 
 
-if(isset($_POST['submit'])){
+if(isset($_POST['roomname'])){
 
 
 
-$fname=$_POST['fname'];
-$email=$_POST['email'];
+$roomname=$_POST['roomname'];
 
-
-
-if($_FILES["dp"]["name"]==""){
-
-
-    $insert = $conn->query("UPDATE `admin` SET `username`='$fname',`email`='$email' WHERE `adminid`='$adminid'");
+$insert = $conn->query("INSERT INTO `freezerroom`(`roomname`) VALUES ('$roomname')");
     
 if($insert){
       $statusMsg= "Toast.fire({
   icon: 'success',
   padding: '3em',  
   background: '#EBECEC',
-  title: ' User Updated Successfully.'
+  title: ' Room Added Successfully.'
   });";               
     
 }
+  }
+
+
+  if(isset($_POST['addfreezer'])){
+
+    $frename=$_POST['frename'];
+    $frerows=$_POST['frerows'];
+    $frecolumns=$_POST['frecolumns'];
+    $roomid=$_POST['roomid'];
+
     
-    else{
-        echo mysqli_error($conn); 
-      $statusMsg= "Toast.fire({
-        icon: 'error',
-        padding: '3em',
-        background: '#EBECEC',
-        title: ' Uknown Error!'
-      });";          
-      } 
-  
-  
-  
-  }
-
-  else{
-
-$targetDir = "images/";
-$filename = basename($_FILES["dp"]["name"]);
-$tempdp = explode(".", $filename);
-$newfilename = $email. '.' . end($tempdp);  
-$targetFilePath = $targetDir . $newfilename;
-$fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
-$allowTypes = array('jpg','png','jpeg');
-
-
-
-
-if(in_array($fileType, $allowTypes)){
-        if(move_uploaded_file($_FILES['dp']['tmp_name'], $targetFilePath)){
-            $insert = $conn->query("UPDATE `admin` SET `username`='$fname',`email`='$email',`dp`='$targetFilePath' WHERE `adminid`='$adminid'");
-            if($insert){
-              $statusMsg= "Toast.fire({
-  icon: 'success',
-  padding: '3em',  
-  background: '#EBECEC',
-  title: ' User Updated Successfully.'
-});";               
-            }else{
-
-               
-              $statusMsg= "Toast.fire({
-                icon: 'error',
-                padding: '3em',
-                background: '#EBECEC',
-                title: ' File upload failed, please try again.'
-              });";          
-              } 
-        }else
-        {
+    $insert = $conn->query("INSERT INTO `freezer`( `frid`, `freezername`, `freezerrows`, `freezercolumns`) VALUES 
+    ( '$roomid','$frename','$frerows','$frecolumns')");
+        
+    if($insert){
           $statusMsg= "Toast.fire({
-            icon: 'error',
-            padding: '3em',
-            background: '#EBECEC',
-            title: ' Sorry, there was an error uploading your file.'
-          });";     
-        }
-    }
-    else{
-      $statusMsg= "Toast.fire({
-        icon: 'warning',
-        padding: '3em',
-        background: '#EBECEC',
-        title: ' Sorry, only JPG, JPEG, PNG files are allowed to upload for Profile Picture.'
-      });"; 
-
+      icon: 'success',
+      padding: '3em',  
+      background: '#EBECEC',
+      title: 'Freezer Added Successfully.'
+      });";               
+        
     }
 
-
-  
-
-  }
-
-}
+    echo mysqli_error($conn);
+      }
 
 
 
@@ -222,17 +168,29 @@ input[type=number] {
       </thead>
       <tbody >    
 
-<tr>
+      <?php
+
+$sql1 = "SELECT * FROM `freezer` as f INNER JOIN `freezerroom` as fr on f.frid=fr.frid;";
+ 
+ 
+$result1 = mysqli_query($conn, $sql1);
 
 
-<td>FR-1 </td>
-<td>Urine  Freezer </td>
-<td>8</td>
-<td>4</td>
+while($row1 = mysqli_fetch_array($result1))  
+{ 
+
+
+   echo "<tr>
+
+
+<td>FR-".$row1["freid"]."</td>
+<td>".$row1["freezername"]."</td>
+<td>".$row1["freezerrows"]."</td>
+<td>".$row1["freezercolumns"]."</td>
 <td>
-Room 1
+".$row1["roomname"]."
 </td>
-<td>64</td>
+<td>".((intval($row1["freezercolumns"]))*(intval($row1["freezerrows"])))."</td>
 
                       <td>    
 <a class='btn btn-info btn-sm' href='patientdetails.php?patientid=1'>
@@ -248,54 +206,15 @@ Room 1
     Delete
 </a></td>
 </tr>
-<tr>
+<tr>";
+
+}
 
 
-<td>FR-2 </td>
-<td>DNA FREEZER</td>
-<td>6</td>
-<td>3</td>
-
-<td>Room 2</td>
-                      <td>18</td>
-                     <td>    
-<a class='btn btn-info btn-sm' href='patientdetails.php?patientid=2'>
-    <i class='fas fa-pencil-alt'>
-    </i>
-    View
-</a>
+?> 
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger2'>
-    <i class='fas fa-trash'>
-    </i>
-    Delete
-</a></td> 
-</tr>
-<tr>
 
-
-<td>FR-3 </td>
-<td> Serum / Plasma Storage</td>
-<td>5</td>
-<td>5</td>
-
-<td>Room 2</td>
-                      <td>25</td>
-                  <td>    
-<a class='btn btn-info btn-sm' href='patientdetails.php?patientid=2'>
-    <i class='fas fa-pencil-alt'>
-    </i>
-    View
-</a>
-
-
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger2'>
-    <i class='fas fa-trash'>
-    </i>
-    Delete
-</a></td> 
-</tr>
 
 
 
@@ -351,25 +270,38 @@ Room 1
                   <div class="row">
                 <div class="form-group col-md-12">
                     <label >Freezer Name</label>
-                    <input type="name" class="form-control"  placeholder="Enter Freezer Name" name="fname" required >
+                    <input type="name" class="form-control"  placeholder="Enter Freezer Name" name="frename" required >
                   </div>
                   <div class="form-group col-md-6">
                     <label for="exampleInputEmail1">Freezer Rows</label>
-                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Number of Rows" name="frows" required >
+                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Number of Rows" name="frerows" required >
                   </div>
                   <div class="form-group col-md-6">
                     <label for="exampleInputEmail1">Freezer Columns</label>
-                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Number of Columns" name="fcolumns" required >
+                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Number of Columns" name="frecolumns" required >
                   </div>
 
                   <div class="form-group col-md-12">
-                  <label for="exampleInputEmail1">Room Location</label>
+                  <label >Room Location</label>
 
                       
-                        <select class="form-control" >
-                          <option selected>Room 1</option>
-                          <option>Room 2</option>
-                          <option>Room 3</option>
+                        <select class="form-control" name="roomid">
+                        <?php
+
+$sql2 = "SELECT * FROM `freezerroom`";
+ 
+ 
+$result2 = mysqli_query($conn, $sql2);
+
+
+while($row2 = mysqli_fetch_array($result2))  
+{ 
+ echo '<option value="'.$row2["frid"].'">'.$row2["roomname"].'</option>';
+
+}
+
+?>
+                         
                         </select>
                       </div>
                      
@@ -381,7 +313,7 @@ Room 1
                 </div>
 
                 <div class="col-md-12 text-center mb-5">
-                  <button type="submit" class="btn btn-primary btn-block btn-lg" name="submit">ADD</button>
+                  <button type="submit" class="btn btn-primary btn-block btn-lg" name="addfreezer">ADD</button>
                 </div>
                
               </form>
@@ -396,18 +328,38 @@ Room 1
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">ADD ROOM</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        ...
+      <form method="POST" action="" enctype="multipart/form-data" >
+                <div class="card-body">
+                  <div class="row">
+                <div class="form-group col-md-12">
+                    <label >Room Name</label>
+                    <input type="name" class="form-control"  placeholder="Enter Freezer Room Name" name="roomname" required >
+                  </div>
+               
+                 
+
+          
+                     
+           
+                  </div>
+ 
+</div>
+                
+                </div>
+
+                <div class="col-md-12 text-center mb-5">
+                  <button type="submit" class="btn btn-primary btn-block btn-lg" name="addroom">ADD</button>
+                </div>
+               
+              </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+ 
     </div>
   </div>
 </div>

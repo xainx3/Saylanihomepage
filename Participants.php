@@ -8,8 +8,14 @@ if(!isset($_SESSION["id"])){
   header("Location: ../index.php");
   exit();
   }
-if(isset($_POST['update'])){
+if(isset($_POST['submit'])){
 
+$studyid=$_POST['mrno'];
+
+
+
+$sid_num = preg_replace('/[^0-9]/', '', $studyid);
+$sid_alpha = preg_replace('/[^a-zA-Z]/', '', $studyid);
 
 
 $name=$_POST['name'];
@@ -17,14 +23,14 @@ $edate=$_POST['edate'];
 $rdate=$_POST['rdate'];
 $age=$_POST['age'];
 $gender=$_POST['gender'];
-$contact=$_POST['contact'];
+$contact=$_POST['contactno'];
 
 if(!isset($_POST['temp'])){
 
   $temp='N/A';
 }
 else{
-  $temp=$_POST['temp'];
+  $temp=$_POST['temp'].'C';
 }
 
 if(!isset($_POST['cnic'])){
@@ -35,23 +41,35 @@ else{
   $cnic=$_POST['cnic'];
 }
 
+$query= "select * from `participantsinfocenter` where `study_id`='$studyid' ";
+$result= mysqli_query($conn, $query);
 
+if(mysqli_num_rows($result)>0){
+  $statusMsg= "Toast.fire({
+    icon: 'error',
+    padding: '3em',  
+    background: '#EBECEC',
+    title: '&nbsp; Duplicate Entry against Study ID'
+  });";
 
-// $insert = $conn->query("UPDATE `participantsinfocenter` SET `date_of enrollment`='$edate',
-// `date_of_receiving`='$rdate',`name`='$name',`age`='$age',`sex`='$gender',`contact_number`='$contact',
-// `temperature`='$temp' WHERE `study_id`='$patientid'");
+}
+
+else{
+$insert = $conn->query("INSERT INTO `participantsinfocenter`(`study_id`, `sid_alpha`, `sid_num`, `date_of_enrollment`, `date_of_receiving`, `name`, `age`, `sex`, 
+`contact_number`, `temperature`, `cnic`) VALUES ('$studyid','$sid_alpha','$sid_num','$edate','$rdate','$name','$age','$gender',
+'$contact','$temp','$cnic')");
     
-// if($insert){
-//       $statusMsg= "Toast.fire({
-//   icon: 'success',
-//   padding: '3em',  
-//   background: '#EBECEC',
-//   title: ' Participant Updated Successfully.'
-//   });";               
+if($insert){
+      $statusMsg= "Toast.fire({
+  icon: 'success',
+  padding: '3em',  
+  background: '#EBECEC',
+  title: ' Participant Added Successfully.'
+  });";               
     
-// }
-
-
+}
+}
+echo mysqli_error($conn);
 
 
 
@@ -67,15 +85,27 @@ else{
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LIMS | Dashboard</title>
 
-  <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  
+
+  <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
+  <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+
+  <link rel="stylesheet" href="plugins/toastr/toastr.min.css">
+
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
-  <link rel="stylesheet" href="dist/css/jquery.steps.css">
-  <link rel="stylesheet" href="dist/css/main.css">
-  <link rel="stylesheet" href="dist/css/normalize.css">
  <style>
 .form-center {
 	position: relative;
@@ -126,9 +156,7 @@ else{
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__wobble" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-  </div>
+ 
   <?php include 'header.php'  ?>
   
 
@@ -140,7 +168,7 @@ else{
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0"> Sample Registration</h1>
+            <h1 class="m-0"> Participant's Registration</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -153,15 +181,74 @@ else{
     </div>
 
 
-    <form method="POST" action="" enctype="multipart/form-data" id="registrationform" class="m-3 p-5 bg-dark rounded">
+    <form method="POST" action="" enctype="multipart/form-data" id="registrationform" class="m-5 p-5 bg-dark rounded">
+      <h1 class="text-center" style="margin: 0 0;">Enter Participant's Details</h1>
 
-    <h1 class="text-center" style="margin: 0 0;">Enter Participant's Details</h1>
+      <div class="card-body">
+        <div class="row">
 
+      <div class="form-group col-md-6">
+          <label >Study Id</label>
+          <input type="name" class="form-control"  placeholder="Enter Study Id" name="mrno" required>
+        </div>
 
+        <div class="form-group col-md-6">
+          <label for="exampleInputEmail1">Name</label>
+          <input type="name" class="form-control"  placeholder="Enter Full Name" name="name" required>
+        </div>
 
+        <div class="form-group col-md-6">
+          <label for="exampleInputPassword1">Date of Enrollment</label>
+          <input type="date" class="form-control"   name="edate" required>
+        </div>
 
+        <div class="form-group col-md-6">
+          <label for="exampleInputPassword1">Date of Receiving</label>
+          <input type="date" class="form-control"  placeholder="Enter age" name="rdate" required>
+        </div>
+        
 
-</form>
+        <div class="form-group col-md-6">
+                      <label for="exampleInputPassword1">Age</label>
+                      <input type="number" class="form-control" placeholder="Enter age of Participant"  name="age" required >
+                    </div>
+
+        <div class="form-group">
+          <label for="exampleInputPassword1">Gender</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" checked value="MALE">
+            <label class="form-check-label">Male</label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" value="FEMALE">
+            <label class="form-check-label">Female</label>
+          </div>
+       
+        </div>
+        <div class="form-group col-md-6">
+          <label >Contact</label>
+          <input type="number" class="form-control"  placeholder="Enter Contact Number" name="contactno" required>
+        </div>
+        
+          <div class="form-group col-md-6">
+                      <label >Temprature &#8451;</label>
+                      <input type="name" class="form-control"  placeholder="Enter Temprature of Sample" name="temp"  >
+                    </div>
+                    <div class="form-group col-md-12 mb-5">
+                      <label >CNIC</label>
+                      <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="cnic" >
+                    </div>
+
+</div>
+      
+  
+<div class="form-group col-md-12 text-center">
+                      <input type="submit" class="btn btn-lg btn-primary" value="submit" name="submit" >
+                    </div>
+     
+     
+    </form>
 
      
      
@@ -174,7 +261,82 @@ else{
   </div>
   
   
-  
+  <section class="container-fluid">
+<h1 class="text-center">RECENT ENTRIES</h1>
+  <table id="recenttb" class="table table-bordered table-striped text-center">
+      <thead>
+      <tr>
+        <th>STUDY ID</th>
+        <th>NAME</th>
+        <th>DATE OF ENROLLMENT</th>
+        <th>DATE OF RECEIVING</th>
+        <th>AGE</th>
+        <th>GENDER</th>
+        <th>CONTACT</th>
+        <th>TEMPRATURE</th>
+        <th>CNIC</th>
+        <th>VIEW</th>
+      </tr>
+      </thead>
+      <tbody >    
+
+      <?php
+
+$sql1 = "SELECT *FROM `participantsinfocenter`  ORDER BY `timestamp` DESC LIMIT 10";
+ 
+ 
+$result1 = mysqli_query($conn, $sql1);
+
+
+while($row1 = mysqli_fetch_array($result1))  
+{ 
+
+    $studyid=$row1['study_id'];  
+    $name=$row1['name'];
+    $dateofen=$row1['date_of_enrollment'];
+    $dateofrec=$row1['date_of_receiving'];
+    $age=$row1['age'];
+    $gender=$row1['sex'];
+    $contactnumber=$row1['contact_number'];
+    $temp=$row1['temperature'];
+
+
+echo "<tr>
+
+<td>".$row1['study_id']."</td>
+<td>".$row1['name']."</td>
+<td>".$row1['date_of_enrollment']."</td>
+<td>".$row1['date_of_receiving']."</td>
+<td>".$row1['age']."</td>
+<td>".$row1['sex']."</td>
+<td>".$row1['contact_number']."</td>
+<td>".$row1['temperature']."</td>
+<td>".$row1['cnic']."</td>
+<td><a class='btn btn-info btn-sm' href='patientdetails.php?patientid=".$row1['study_id']."'>
+<i class='fas fa-pencil-alt'>
+</i>
+View
+</a></td>
+
+</tr>";
+
+
+}
+
+
+?> 
+
+
+
+
+
+
+
+
+      </tbody>
+    
+    </table>   
+  </section>
   
 
   <!-- Control Sidebar -->
@@ -209,385 +371,42 @@ else{
   </div>
 <!-- REQUIRED SCRIPTS -->
 
-<!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
-<script src="dist/js/jquery.steps.js"></script>
-<script src="dist/js/jquery.cookie-1.3.1.js"></script>
-  <script src="dist/js/validate.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+<script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+<script src="plugins/toastr/toastr.min.js"></script>
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
 
-<script>
 
-$("#example-basic").steps({
-    headerTag: "h3",
-    bodyTag: "section",
-    transitionEffect: "slideLeft",
-    autoFocus: true
+
+
+
+    <script>
+
+      
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'center',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
 });
-</script>
 
-<script>
-      
-      $(function() {
-        $("#wizard").steps({
-          headerTag: "h3",
-          bodyTag: "section",
-          transitionEffect: "slideLeft",
-          autoFocus: true,
-          saveState: true,
-          labels: {
-
-            finish: "Finish",
-            next: "Next",
-            previous: "Previous"
-
-          },
-          onStepChanging: function(event, currentIndex, newIndex) {
-
-            // alert(currentIndex);
-            var form1 = $("#registrationform");
-           
-            // var form3 = $("#m1form3_submit");
-            // var form4 = $("#m1form4_submit");
-
-
-            if (currentIndex > newIndex)
-        {
-            return true;
-        }
-
-            if (currentIndex == 0) {
-              form1.validate().settings.ignore = ":disabled,:hidden";
-            
-            if(form1.valid()){
-
-              //  event.preventDefault();
-              // $.ajax({
-              //   method: "POST",
-              //   url: "formsubmit.php",
-              //   data: $("#m1form1_submit").serialize(),
-              //   beforeSend: function() {
-              //     $("#loadMe").modal({
-              //       backdrop: "static", //remove ability to close modal with click
-              //       keyboard: false, //remove option to close with keyboard
-              //       show: true //Display loader!
-              //     });
-
-              //     setTimeout(function() {
-              //       $("#loadMe").modal("hide");
-              //     }, 5000);
-
-
-              //   },
-              //   success: function(textStatus, status) {
-              //     console.log(textStatus);
-              //     console.log(status);
-
-              //   },
-              //   error: function(xhr, textStatus, error) {
-              //     console.log(xhr.responseText);
-              //     console.log(xhr.statusText);
-              //     console.log(textStatus);
-              //     console.log(error);
-              //   }
-              // });
-              $("#loadMe").modal({
-                   backdrop: "static", //remove ability to close modal with click
-                    keyboard: false, //remove option to close with keyboard
-                    show: true //Display loader!
-                   });
-              setTimeout(function() {
-                   $("#loadMe").modal("hide");
-                  }, 5000);
-              return true;
-      
-            }
-            else{
-            return form1.valid();
-          }
-            
-          }
-         
-
-          // if (currentIndex == 1) {
-          //     form2.validate().settings.ignore = ":disabled,:hidden";
-            
-          //   if(form2.valid()){
-
-          //      event.preventDefault();
-          //     $.ajax({
-          //       method: "POST",
-          //       url: "formsubmit.php",
-          //       data: $("#m1form2_submit").serialize(),
-          //       beforeSend: function() {
-          //         $("#loadMe").modal({
-          //           backdrop: "static", //remove ability to close modal with click
-          //           keyboard: false, //remove option to close with keyboard
-          //           show: true //Display loader!
-          //         });
-
-          //         setTimeout(function() {
-          //           $("#loadMe").modal("hide");
-          //         }, 5000);
-
-
-          //       },
-          //       success: function(textStatus, status) {
-          //         console.log(textStatus);
-          //         console.log(status);
-
-          //       },
-          //       error: function(xhr, textStatus, error) {
-          //         console.log(xhr.responseText);
-          //         console.log(xhr.statusText);
-          //         console.log(textStatus);
-          //         console.log(error);
-          //       }
-          //     });
-
-          //     $("#loadMe").modal({
-          //          backdrop: "static", //remove ability to close modal with click
-          //           keyboard: false, //remove option to close with keyboard
-          //           show: true //Display loader!
-          //          });
-          //     setTimeout(function() {
-          //          $("#loadMe").modal("hide");
-          //         }, 5000);
-          //     return true;
-
-          //     // return form2.valid();
-          //   }
-          //   else{
-          //   return form2.valid();
-          // }
-            
-          // }
-
-          // if (currentIndex == 2) {
-          //     form3.validate().settings.ignore = ":disabled,:hidden";
-            
-          //   if(form3.valid()){
-
-          //      event.preventDefault();
-          //     $.ajax({
-          //       method: "POST",
-          //       url: "formsubmit.php",
-          //       data: $("#m1form3_submit").serialize(),
-          //       beforeSend: function() {
-          //         $("#loadMe").modal({
-          //           backdrop: "static", //remove ability to close modal with click
-          //           keyboard: false, //remove option to close with keyboard
-          //           show: true //Display loader!
-          //         });
-
-          //         setTimeout(function() {
-          //           $("#loadMe").modal("hide");
-          //         }, 5000);
-
-
-          //       },
-          //       success: function(textStatus, status) {
-          //         console.log(textStatus);
-          //         console.log(status);
-
-          //       },
-          //       error: function(xhr, textStatus, error) {
-          //         console.log(xhr.responseText);
-          //         console.log(xhr.statusText);
-          //         console.log(textStatus);
-          //         console.log(error);
-          //       }
-          //     });
-          //     $("#loadMe").modal({
-          //          backdrop: "static", //remove ability to close modal with click
-          //           keyboard: false, //remove option to close with keyboard
-          //           show: true //Display loader!
-          //          });
-          //     setTimeout(function() {
-          //          $("#loadMe").modal("hide");
-          //         }, 5000);
-          //     return true;
-          //     // return form3.valid();
-          //   }
-          //   else{
-          //   return form3.valid();
-          // }
-            
-          // }
-//           if (currentIndex == 3) {
-//               form4.validate().settings.ignore = ":disabled,:hidden";
-//               form4.validate({
-//   rules: {
-//     total1: {
-//       required: true,
-//       min: 460000
-//     }
-//   }
-// });
-          //   if(form4.valid()){
-
-          //      event.preventDefault();
-          //     $.ajax({
-          //       method: "POST",
-          //       url: "formsubmit.php",
-          //       data: $("#m1form4_submit").serialize(),
-          //       beforeSend: function() {
-          //         $("#loadMe").modal({
-          //           backdrop: "static", //remove ability to close modal with click
-          //           keyboard: false, //remove option to close with keyboard
-          //           show: true //Display loader!
-          //         });
-
-          //         setTimeout(function() {
-          //           $("#loadMe").modal("hide");
-          //         }, 5000);
-
-
-          //       },
-          //       success: function(textStatus, status) {
-          //         console.log(textStatus);
-          //         console.log(status);
-
-          //       },
-          //       error: function(xhr, textStatus, error) {
-          //         console.log(xhr.responseText);
-          //         console.log(xhr.statusText);
-          //         console.log(textStatus);
-          //         console.log(error);
-          //       }
-          //     });
-          //     var nu = parseInt($('#total1').val());
-
-          //     if(nu<460000){
-          // alert('Value should be greater than 460000');
-          // return false;
-
-          //     }
-          //     else{
-          //       return form1.valid();
-          //     }
-              
-          //   }
-          //   else{
-          //   return form4.valid();
-          // }
-            
-          // }
-         
-            
-
-          },
-
-          onFinishing: function(event, currentIndex) {
-            var form2 = $("#collectionform");
-            form2.validate().settings.ignore = ":disabled,:hidden";
-            
-              if(form2.valid()){
-  
-                 event.preventDefault();
-                // $.ajax({
-                //   method: "POST",
-                //   url: "formsubmit.php",
-                //   data: $("#m1form2_submit").serialize(),
-                //   beforeSend: function() {
-                //     $("#loadMe").modal({
-                //       backdrop: "static", //remove ability to close modal with click
-                //       keyboard: false, //remove option to close with keyboard
-                //       show: true //Display loader!
-                //     });
-  
-                //     setTimeout(function() {
-                //       $("#loadMe").modal("hide");
-                //     }, 5000);
-  
-  
-                //   },
-                //   success: function(textStatus, status) {
-                //     console.log(textStatus);
-                //     console.log(status);
-  
-                //   },
-                //   error: function(xhr, textStatus, error) {
-                //     console.log(xhr.responseText);
-                //     console.log(xhr.statusText);
-                //     console.log(textStatus);
-                //     console.log(error);
-                //   }
-                // });
-  
-                $("#loadMe").modal({
-                     backdrop: "static", //remove ability to close modal with click
-                      keyboard: false, //remove option to close with keyboard
-                      show: true //Display loader!
-                     });
-                setTimeout(function() {
-                     $("#loadMe").modal("hide");
-                    }, 5000);
-
-                    window.location.href = "dashboard.php";
-                return true;
-                    
-                // return form2.valid();
-              }
-              else{
-              return form2.valid();
-            }
-              
-           
-          //   var form5 = $("#m1form5_submit");
-
-          //   form5.validate().settings.ignore = ":disabled,:hidden";
-
-          //   if(form5.valid()){
-          //   event.preventDefault();
-          //   $.ajax({
-          //     method: "POST",
-          //     url: "formsubmit.php",
-          //     data: $("#m1form5_submit").serialize(),
-          //     beforeSend: function() {
-          //       $("#loadMe").modal({
-          //         backdrop: "static", //remove ability to close modal with click
-          //         keyboard: false, //remove option to close with keyboard
-          //         show: true //Display loader!
-          //       });
-
-          //       setTimeout(function() {
-          //         $("#loadMe").modal("hide");
-          //       }, 5000);
-
-
-          //     },
-          //     success: function(textStatus, status) {
-          //       console.log(textStatus);
-          //       console.log(status);
-          //       $(location).attr('href', '../rut.php');
-
-          //     },
-          //     error: function(xhr, textStatus, error) {
-          //       console.log(xhr.responseText);
-          //       console.log(xhr.statusText);
-          //       console.log(textStatus);
-          //       console.log(error);
-          //     }
-          //   });
-          //   return form5.valid();
-          //   }
-          //   else{
-          //   return form5.valid();
-          // }
-
-
-
-          }
-        });
-
-      });
-
-   
+<?php if(isset($statusMsg)){ echo $statusMsg; }?> 
 
     function printbrc(){
       if($('#blood').is(':checked') && $('#urine').is(':checked')){
@@ -615,15 +434,20 @@ $("#example-basic").steps({
  
         }
 
-//         stepTitles.eq(state.currentIndex).next(".body")
-//     .each(function () {
-//     var bodyHeight = $(this).height();
-//     var padding = $(this).innerHeight() - bodyHeight;
-//     bodyHeight += padding;
-//     $(this).after('<div class="' + options.clearFixCssClass + '"></div>');
-//     $(this).parent().animate({ height: bodyHeight }, "slow");
-// });
-        
+        if ( window.history.replaceState ) {
+  window.history.replaceState( null, null, window.location.href );
+}
+
+         $('#recenttb').DataTable({
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": false,
+      "autoWidth": true,
+      "responsive": true,
+    });
+   
     </script>
 </body>
 </html>

@@ -814,15 +814,11 @@ $("#example-basic").steps({
           }
  
         }
+        if ( window.history.replaceState ) {
+  window.history.replaceState( null, null, window.location.href );
+}
 
-//         stepTitles.eq(state.currentIndex).next(".body")
-//     .each(function () {
-//     var bodyHeight = $(this).height();
-//     var padding = $(this).innerHeight() - bodyHeight;
-//     bodyHeight += padding;
-//     $(this).after('<div class="' + options.clearFixCssClass + '"></div>');
-//     $(this).parent().animate({ height: bodyHeight }, "slow");
-// });
+
         
     </script>
 </body>

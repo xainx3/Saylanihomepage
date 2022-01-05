@@ -40,7 +40,7 @@ if(!isset($_POST['temp'])){
   $temp='N/A';
 }
 else{
-  $temp=$_POST['temp'];
+  $temp=$_POST['temp'].'C';
 }
 
 if(!isset($_POST['cnic'])){
@@ -53,7 +53,7 @@ else{
 
 
 
-$insert = $conn->query("UPDATE `participantsinfocenter` SET `date_of enrollment`='$edate',
+$insert = $conn->query("UPDATE `participantsinfocenter` SET `date_of_enrollment`='$edate',
 `date_of_receiving`='$rdate',`name`='$name',`age`='$age',`sex`='$gender',`contact_number`='$contact',
 `temperature`='$temp' WHERE `study_id`='$patientid'");
     
@@ -146,7 +146,7 @@ while($row1 = mysqli_fetch_array($result1))
 
     $studyid=$row1['study_id'];  
     $name=$row1['name'];
-    $dateofen=$row1['date_of enrollment'];
+    $dateofen=$row1['date_of_enrollment'];
     $dateofrec=$row1['date_of_receiving'];
     $age=$row1['age'];
     $gender=$row1['sex'];
@@ -207,8 +207,9 @@ while($row1 = mysqli_fetch_array($result1))
   
                     <div class="form-group col-md-6">
                       <label >Temprature</label>
-                      <input type="name" class="form-control"  placeholder="Temprature of Participant" name="temp" value="<?php echo   $temp ?>" required >
+                      <input type="number" class="form-control"  placeholder="Temprature of Participant" name="temp" value="<?php echo  preg_replace('/[^0-9]/', '',  $temp); ?>" required >
                     </div>
+                    
                     <div class="form-group col-md-6">
                       <label >CNIC</label>
                       <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="cnic" >
@@ -240,7 +241,9 @@ while($row1 = mysqli_fetch_array($result1))
     </section>
 
 
-<section>
+   <?php if($_SESSION['role']!="DE"){
+
+echo '<section>
 
 <div class="col-12">
             <div class="card card-primary card-outline card-outline-tabs">
@@ -297,15 +300,15 @@ while($row1 = mysqli_fetch_array($result1))
 <td>F1->R2->C5</td>
 
                       <td>    
-<a class='btn btn-info btn-sm' href='sampledetail.php?sampleid=1'>
-    <i class='fas fa-pencil-alt'>
+<a class="btn btn-info btn-sm" href="sampledetail.php?sampleid=1">
+    <i class="fas fa-pencil-alt">
     </i>
     View
 </a>
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger1'>
-    <i class='fas fa-trash'>
+<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger1">
+    <i class="fas fa-trash">
     </i>
     Delete
 </a></td>
@@ -328,15 +331,15 @@ while($row1 = mysqli_fetch_array($result1))
                       </div></td>
                       <td>F1->R2->C4</td>
                       <td>    
-<a class='btn btn-info btn-sm' href='serum.php?sampleid=2'>
-    <i class='fas fa-pencil-alt'>
+<a class="btn btn-info btn-sm" href="serum.php?sampleid=2">
+    <i class="fas fa-pencil-alt">
     </i>
     View
 </a>
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger2'>
-    <i class='fas fa-trash'>
+<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger2">
+    <i class="fas fa-trash">
     </i>
     Delete
 </a></td>
@@ -359,15 +362,15 @@ while($row1 = mysqli_fetch_array($result1))
                       </div></td>
                       <td>F1->R2->C3</td>
                       <td>    
-<a class='btn btn-info btn-sm' href='urine.php?sampleid=3'>
-    <i class='fas fa-pencil-alt'>
+<a class="btn btn-info btn-sm" href="urine.php?sampleid=3">
+    <i class="fas fa-pencil-alt">
     </i>
     View
 </a>
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger3'>
-    <i class='fas fa-trash'>
+<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger3">
+    <i class="fas fa-trash">
     </i>
     Delete
 </a></td>
@@ -419,15 +422,15 @@ while($row1 = mysqli_fetch_array($result1))
                 </a></td>
 
                       <td>    
-<a class='btn btn-info btn-sm' href='report.php?sampleid=1'>
-    <i class='fas fa-pencil-alt'>
+<a class="btn btn-info btn-sm" href="report.php?sampleid=1">
+    <i class="fas fa-pencil-alt">
     </i>
     View
 </a>
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger1'>
-    <i class='fas fa-trash'>
+<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger1">
+    <i class="fas fa-trash">
     </i>
     Delete
 </a></td>
@@ -452,15 +455,15 @@ while($row1 = mysqli_fetch_array($result1))
 <i class="fas fa-download"></i> Download
                 </a></td>
                       <td>    
-<a class='btn btn-info btn-sm' href='serum.php?sampleid=2'>
-    <i class='fas fa-pencil-alt'>
+<a class="btn btn-info btn-sm" href="serum.php?sampleid=2">
+    <i class="fas fa-pencil-alt">
     </i>
     View
 </a>
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger2'>
-    <i class='fas fa-trash'>
+<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger2">
+    <i class="fas fa-trash">
     </i>
     Delete
 </a></td>
@@ -485,15 +488,15 @@ while($row1 = mysqli_fetch_array($result1))
 <i class="fas fa-download"></i> Download
                 </a></td>
                       <td>    
-<a class='btn btn-info btn-sm' href='urine.php?sampleid=3'>
-    <i class='fas fa-pencil-alt'>
+<a class="btn btn-info btn-sm" href="urine.php?sampleid=3">
+    <i class="fas fa-pencil-alt">
     </i>
     View
 </a>
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger3'>
-    <i class='fas fa-trash'>
+<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger3">
+    <i class="fas fa-trash">
     </i>
     Delete
 </a></td>
@@ -518,15 +521,15 @@ while($row1 = mysqli_fetch_array($result1))
 <i class="fas fa-download"></i> Download
                 </a></td>
                       <td>    
-<a class='btn btn-info btn-sm' href='urine.php?sampleid=3'>
-    <i class='fas fa-pencil-alt'>
+<a class="btn btn-info btn-sm" href="urine.php?sampleid=3">
+    <i class="fas fa-pencil-alt">
     </i>
     View
 </a>
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger3'>
-    <i class='fas fa-trash'>
+<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger3">
+    <i class="fas fa-trash">
     </i>
     Delete
 </a></td>
@@ -551,15 +554,15 @@ while($row1 = mysqli_fetch_array($result1))
 <i class="fas fa-download"></i> Download
                 </a></td>
                       <td>    
-<a class='btn btn-info btn-sm' href='urine.php?sampleid=3'>
-    <i class='fas fa-pencil-alt'>
+<a class="btn btn-info btn-sm" href="urine.php?sampleid=3">
+    <i class="fas fa-pencil-alt">
     </i>
     View
 </a>
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger3'>
-    <i class='fas fa-trash'>
+<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger3">
+    <i class="fas fa-trash">
     </i>
     Delete
 </a></td>
@@ -651,7 +654,11 @@ while($row1 = mysqli_fetch_array($result1))
               <!-- /.card -->
             </div>
           </div>
-</section>
+</section>';
+
+    }
+
+    ?>
 
     <!-- /.content -->
   </div>

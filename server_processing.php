@@ -1,4 +1,10 @@
 <?php
+
+session_start();
+if(!isset($_SESSION["id"])){
+  header("Location: dashboard.php");
+  exit();
+  }
 ## Database configuration
 include 'connection/connection.php';
 
@@ -36,6 +42,41 @@ $data = array();
 
 while ($row = mysqli_fetch_assoc($empRecords)) {
 
+if($_SESSION['role']=="DE"){
+$deletebtn="";
+}
+else{
+$deletebtn="<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#".$row['study_id']."'>
+<i class='fas fa-trash'>
+</i>
+Delete
+</a>
+
+<div class='modal fade' id='".$row['study_id']."'>
+    <div class='modal-dialog'>
+      <div class='modal-content bg-danger'>
+   
+        <div class='modal-body'>
+          <p class='text-center'>Are you sure you want to remove this Participant?</p>
+        </div>
+        <div class='modal-footer justify-content-between'>
+          <button type='button' class='btn btn-outline-light' data-dismiss='modal'>No</button>
+        
+        <form method='post'>
+
+<input type='hidden' value='".$row['study_id']."' name='sid'>
+
+<button type='submit' class='btn btn-outline-light' name='delete'>Yes</button>
+
+      </form>
+        
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>";
+}
 
 
    $data[] = array( 
@@ -54,14 +95,7 @@ while ($row = mysqli_fetch_assoc($empRecords)) {
     <i class='fas fa-pencil-alt'>
     </i>
     View
-</a>
-
-
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger6'>
-    <i class='fas fa-trash'>
-    </i>
-    Delete
-</a>"
+</a> ".$deletebtn
 
    );
 }

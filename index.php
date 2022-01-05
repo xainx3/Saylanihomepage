@@ -18,6 +18,7 @@ if(isset($_POST['login'])){
 		    $_SESSION['id']=$f['adminid'];
         $_SESSION['name']=$f['username'];
         $_SESSION['dp']=$f['dp'];
+        $_SESSION['role']=$f['role'];
 
       // echo ' <script>alert("Successfull")</script>';
 		header ('location:dashboard.php');
