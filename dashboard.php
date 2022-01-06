@@ -180,8 +180,8 @@ if($_SESSION['role']!="DE"){
         <th>AGE</th>
         <th>GENDER</th>
         <th>CONTACT</th>
-        <th>Status</th>
-        <th>Options</th>
+        <th class="nosort">Status</th>
+        <th class="nosort">Options</th>
       </tr>
       </thead>
       <tbody >    
@@ -271,6 +271,10 @@ const Toast = Swal.mixin({
       'ajax': {
           'url':'server_processing'
       },
+      'aoColumnDefs': [{
+        'bSortable': false,
+        'aTargets': ['nosort']
+    }],
       'columns': [
          { data: 'study_id' },
          { data: 'name' },

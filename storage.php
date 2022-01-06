@@ -60,7 +60,54 @@ if($insert){
     echo mysqli_error($conn);
       }
 
+      if(isset($_POST['freezer'])){
 
+        $freeid=$_POST['freeid'];
+        
+         
+        $delete = $conn->query("DELETE FROM `freezer` WHERE `freid`='$freeid'");
+        if($delete){
+          $statusMsg= "Toast.fire({
+        icon: 'success',
+        padding: '3em',  
+        background: '#EBECEC',
+        title: ' Freezer Deleted Successfully.'
+        });";               
+        }else{
+            echo mysqli_error($conn); 
+          $statusMsg= "Toast.fire({
+            icon: 'error',
+            padding: '3em',
+            background: '#EBECEC',
+            title: ' Unable to delete Freezer.'
+          });";          
+          } 
+        
+        }
+        if(isset($_POST['dsroom'])){
+
+          $sroom=$_POST['sroom'];
+          
+           
+          $delete = $conn->query("DELETE FROM `freezerroom` WHERE `frid`='$sroom'");
+          if($delete){
+            $statusMsg= "Toast.fire({
+          icon: 'success',
+          padding: '3em',  
+          background: '#EBECEC',
+          title: ' Freezer Deleted Successfully.'
+          });";               
+          }else{
+              echo mysqli_error($conn); 
+            $statusMsg= "Toast.fire({
+              icon: 'error',
+              padding: '3em',
+              background: '#EBECEC',
+              title: ' Unable to delete Freezer.'
+            });";          
+            } 
+          
+          }
 
 ?>
 <!DOCTYPE html>
@@ -91,6 +138,9 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+table td{
+  width:100px;
 }
 </style>
 
@@ -151,8 +201,9 @@ input[type=number] {
 
 
 </div>
+<hr>
 <div class="table-responsive">
-
+<h1 class="text-center">FREEZERS</h1>
 
 <table id="example1" class="table table-bordered table-striped text-center ">
       <thead>
@@ -193,18 +244,132 @@ while($row1 = mysqli_fetch_array($result1))
 <td>".((intval($row1["freezercolumns"]))*(intval($row1["freezerrows"])))."</td>
 
                       <td>    
-<a class='btn btn-info btn-sm' href='patientdetails.php?patientid=1'>
+<a class='btn btn-info btn-sm' href='freezerdetails.php?freezerid=".$row1["freid"]."'>
     <i class='fas fa-pencil-alt'>
     </i>
     View
 </a>
 
 
-<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#modal-danger1'>
+<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#free".$row1["freid"]."'>
     <i class='fas fa-trash'>
     </i>
     Delete
-</a></td>
+</a><div class='modal fade' id='free".$row1["freid"]."'>
+<div class='modal-dialog'>
+  <div class='modal-content bg-danger'>
+
+    <div class='modal-body'>
+      <p class='text-center'>Are you sure you want to remove this Participant?</p>
+    </div>
+    <div class='modal-footer justify-content-between'>
+      <button type='button' class='btn btn-outline-light' data-dismiss='modal'>No</button>
+    
+    <form method='post'>
+
+<input type='hidden' value='".$row1["freid"]."' name='freeid'>
+
+<button type='submit' class='btn btn-outline-light' name='freezer'>Yes</button>
+
+  </form>
+    
+    </div>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+</div></td>
+</tr>
+<tr>";
+
+}
+
+
+?> 
+
+
+
+
+
+
+
+
+      </tbody>
+    
+    </table>  
+    </div>
+
+<hr>
+    <div class="container table-responsive">
+<h1 class="text-center">STORAGE ROOMS</h1>
+
+<table id="example1" class=" table table-dark table-striped   text-center ">
+      <thead>
+      <tr>
+        <th>ROOM ID</th>
+        <th>ROOM NAME</th>
+        <th>VIEW/EDIT DETAILS</th>
+      </tr>
+      </thead>
+      <tbody >    
+
+      <?php
+
+$sql1 = "SELECT * FROM `freezerroom` ";
+ 
+ 
+$result1 = mysqli_query($conn, $sql1);
+
+
+while($row1 = mysqli_fetch_array($result1))  
+{ 
+
+
+   echo "<tr>
+
+
+<td>FR-".$row1["frid"]."</td>
+<td>".$row1["roomname"]."</td>
+
+
+
+                      <td >    
+<a class='btn btn-info btn-sm' href='roomdetails.php?roomid=".$row1["frid"]."'>
+    <i class='fas fa-pencil-alt'>
+    </i>
+    View
+</a>
+
+
+<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#fr".$row1["frid"]."'>
+    <i class='fas fa-trash'>
+    </i>
+    Delete
+</a>
+<div class='modal fade' id='fr".$row1["frid"]."'>
+<div class='modal-dialog'>
+  <div class='modal-content bg-danger'>
+
+    <div class='modal-body'>
+      <p class='text-center'>Are you sure you want to remove this Participant?</p>
+    </div>
+    <div class='modal-footer justify-content-between'>
+      <button type='button' class='btn btn-outline-light' data-dismiss='modal'>No</button>
+    
+    <form method='post'>
+
+<input type='hidden' value='".$row1["frid"]."' name='sroom'>
+
+<button type='submit' class='btn btn-outline-light' name='dsroom'>Yes</button>
+
+  </form>
+    
+    </div>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+</div></td>
 </tr>
 <tr>";
 

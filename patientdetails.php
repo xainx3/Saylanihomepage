@@ -186,11 +186,11 @@ while($row1 = mysqli_fetch_array($result1))
                     </div>
                     <div class="form-group col-md-6">
                       <label for="exampleInputEmail1">Date of Enrollment</label>
-                      <input type="date" class="form-control" id="endate"  name="edate" required  value="<?php echo date("Y-m-d", strtotime($dateofen)) ?>">
+                      <input type="date" class="form-control" id="endate"  name="edate" required  value="<?php echo date("Y-m-d", strtotime($dateofen)) ?>" max="<?php echo date("Y-m-d"); ?>">
                     </div>
                     <div class="form-group col-md-6">
                       <label for="exampleInputEmail1">Date of Receiving</label>
-                      <input type="date" class="form-control" id="exampleInputEmail1"  name="rdate" required value="<?php echo date("Y-m-d", strtotime($dateofrec)) ?>">
+                      <input type="date" class="form-control" id="exampleInputEmail1"  name="rdate" required value="<?php echo date("Y-m-d", strtotime($dateofrec)) ?>" max="<?php echo date("Y-m-d"); ?>">
                     </div>
                     <div class="form-group col-md-6">
                       <label for="exampleInputPassword1">Age</label>
@@ -243,7 +243,9 @@ while($row1 = mysqli_fetch_array($result1))
 
    <?php if($_SESSION['role']!="DE"){
 
-echo '<section>
+
+?>
+<section>
 
 <div class="col-12">
             <div class="card card-primary card-outline card-outline-tabs">
@@ -400,173 +402,64 @@ echo '<section>
       </thead>
       <tbody >    
 
-<tr>
+      <?php
+
+$sql1 = "SELECT * FROM `labvalues_lipid` WHERE `study_id`='$patientid'";
+ 
+ 
+$result1 = mysqli_query($conn, $sql1);
 
 
-<td>FY-5025-bb4c61d7664de191 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>Lipid Profile</td>
-<td>27/12/2021</td>
-<td>
-<div class="form-group">
-                        <select class="form-control bg-success">
-                          <option>Pending</option>
-                          <option >Processing</option>
-                          <option Selected>Completed</option>
-                         
-                        </select>
-                      </div>
-</td>
-<td><a class="btn btn-app bg-success">
-<i class="fas fa-download"></i> Download
-                </a></td>
+while($row1 = mysqli_fetch_array($result1))  
+{ 
 
-                      <td>    
-<a class="btn btn-info btn-sm" href="report.php?sampleid=1">
-    <i class="fas fa-pencil-alt">
-    </i>
-    View
-</a>
+    
+  echo '<tr>
 
 
-<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger1">
-    <i class="fas fa-trash">
-    </i>
-    Delete
-</a></td>
-</tr>
-<tr>
+    <td>'.$row1["study_id"].'</td>
+    <td>'.$row1["study_id"].'</td>
+    <td>Lipid Profile</td>
+    <td>'.$row1["study_date"].'</td>
+    <td>
+    <div class="form-group">
+                            <select class="form-control bg-success">
+                              <option>Pending</option>
+                              <option >Processing</option>
+                              <option Selected>Completed</option>
+                             
+                            </select>
+                          </div>
+    </td>
+    <td><a class="btn btn-app bg-success">
+    <i class="fas fa-download"></i> Download
+                    </a></td>
+    
+                          <td>    
+    <a class="btn btn-info btn-sm" href="report.php?sampleid=1">
+        <i class="fas fa-pencil-alt">
+        </i>
+        View
+    </a>
+    
+    
+    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger1">
+        <i class="fas fa-trash">
+        </i>
+        Delete
+    </a></td>
+    </tr>';
 
 
-<td>FY-5025-5a0574530619ccc9 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>UMA</td>
-<td>27/12/2021</td>
 
-<td><div class="form-group">
-                        <select class="form-control bg-warning">
-                          <option>Pending</option>
-                          <option selected>Processing</option>
-                          <option >Storage</option>
-                         
-                        </select>
-                      </div></td>
-                      <td><a class="btn btn-app bg-success disabled">
-<i class="fas fa-download"></i> Download
-                </a></td>
-                      <td>    
-<a class="btn btn-info btn-sm" href="serum.php?sampleid=2">
-    <i class="fas fa-pencil-alt">
-    </i>
-    View
-</a>
+}
 
 
-<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger2">
-    <i class="fas fa-trash">
-    </i>
-    Delete
-</a></td>
-</tr>
-<tr>
+?> 
 
 
-<td>FY-5025-0c14b283f1817f24 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>CBC</td>
-<td>27/12/2021</td>
-
-<td><div class="form-group">
-                        <select class="form-control bg-danger">
-                          <option Selected>Pending</option>
-                          <option >Processing</option>
-                          <option >Completed</option>
-                         
-                        </select>
-                      </div></td>
-                      <td><a class="btn btn-app bg-success disabled">
-<i class="fas fa-download"></i> Download
-                </a></td>
-                      <td>    
-<a class="btn btn-info btn-sm" href="urine.php?sampleid=3">
-    <i class="fas fa-pencil-alt">
-    </i>
-    View
-</a>
 
 
-<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger3">
-    <i class="fas fa-trash">
-    </i>
-    Delete
-</a></td>
-</tr>
-<tr>
-
-
-<td>FY-5025-0c14b283f1817f24 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>HBA1C</td>
-<td>27/12/2021</td>
-
-<td><div class="form-group">
-                        <select class="form-control bg-danger">
-                          <option Selected>Pending</option>
-                          <option >Processing</option>
-                          <option >Completed</option>
-                         
-                        </select>
-                      </div></td>
-                      <td><a class="btn btn-app bg-success disabled">
-<i class="fas fa-download"></i> Download
-                </a></td>
-                      <td>    
-<a class="btn btn-info btn-sm" href="urine.php?sampleid=3">
-    <i class="fas fa-pencil-alt">
-    </i>
-    View
-</a>
-
-
-<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger3">
-    <i class="fas fa-trash">
-    </i>
-    Delete
-</a></td>
-</tr>
-<tr>
-
-
-<td>FY-5025-0c14b283f1817f24 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>DNA</td>
-<td>27/12/2021</td>
-
-<td><div class="form-group">
-                        <select class="form-control bg-danger">
-                          <option Selected>Pending</option>
-                          <option >Processing</option>
-                          <option >Completed</option>
-                         
-                        </select>
-                      </div></td>
-                      <td><a class="btn btn-app bg-success disabled">
-<i class="fas fa-download"></i> Download
-                </a></td>
-                      <td>    
-<a class="btn btn-info btn-sm" href="urine.php?sampleid=3">
-    <i class="fas fa-pencil-alt">
-    </i>
-    View
-</a>
-
-
-<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger3">
-    <i class="fas fa-trash">
-    </i>
-    Delete
-</a></td>
-</tr>
 
 
 
@@ -654,7 +547,9 @@ echo '<section>
               <!-- /.card -->
             </div>
           </div>
-</section>';
+</section>
+
+<?php
 
     }
 

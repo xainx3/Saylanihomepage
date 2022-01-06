@@ -199,12 +199,12 @@ echo mysqli_error($conn);
 
         <div class="form-group col-md-6">
           <label for="exampleInputPassword1">Date of Enrollment</label>
-          <input type="date" class="form-control"   name="edate" required>
+          <input type="date" class="form-control"   name="edate" required max="<?php echo date("Y-m-d"); ?>">
         </div>
 
         <div class="form-group col-md-6">
           <label for="exampleInputPassword1">Date of Receiving</label>
-          <input type="date" class="form-control"  placeholder="Enter age" name="rdate" required>
+          <input type="date" class="form-control"  placeholder="Enter age" name="rdate" required max="<?php echo date("Y-m-d"); ?>">
         </div>
         
 
