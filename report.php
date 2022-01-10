@@ -10,31 +10,18 @@ if(!isset($_SESSION["id"])){
 
 if(isset($_GET['sampleid'])){
 
-    $userid=$_GET['sampleid'];
+    $sampleid=$_GET['sampleid'];
+    $studydate=$_GET['date'];
     
 }
 
 if(!isset($_GET['sampleid'])){
 
-  header("Location: users.php");
+  header("Location: patientdetails.php");
   
 }
 
-if(isset($_POST['submit'])){
 
-
-
-$fname=$_POST['fname'];
-$email=$_POST['email'];
-$password=$_POST['password'];
-$contact=$_POST['contact'];
-$role=$_POST['role'];
-
-
-
-
-
-}
 
 
 
@@ -44,7 +31,7 @@ $role=$_POST['role'];
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CNCD - UPDATE USER</title>
+  <title>CNCD - REPORT</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -57,7 +44,25 @@ $role=$_POST['role'];
 
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
 <style>
+@print { 
+	@page :footer { 
+		display: none
+	} 
 
+	@page :header { 
+		display: none
+	} 
+} 
+@media print { 
+	@page { 
+		margin-top: 0; 
+		margin-bottom: 0; 
+	} 
+	body { 
+		padding-top: 72px; 
+		padding-bottom: 72px ; 
+	} 
+} 
   table{
 
     word-wrap:break-word;
@@ -104,10 +109,40 @@ input[type=number] {
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
+    <?php
 
+$sql1 = "SELECT *FROM `participantsinfocenter` as `pic` INNER JOIN `labvalues_lipid` as `lvl` on pic.study_id=lvl.study_id WHERE lvl.study_id='$sampleid' AND lvl.study_date='$studydate'";
+ 
+
+$result1 = mysqli_query($conn, $sql1);
+
+
+while($row1 = mysqli_fetch_array($result1))  
+
+{ 
+
+  
+  $pgender  =   $row1['sex'];
+  $page     =   $row1['age'];
+  $pname    =   $row1['name'];
+  $chlo     =   $row1['chlo'];
+  $glu      =   $row1['glu'];
+  $creat    =   $row1['creat'];
+  $tg       =   $row1['tg'];
+  $hdl      =   $row1['hdl'];
+  $vldl     =   $row1['vldl'];
+  $astl     =   $row1['astl'];
+  $altl     =   $row1['altl'];
+  $ldl      =   $row1['ldl'];
+  $center   =   $row1['center'];
+
+}
+
+
+?> 
 
 
 <section>
@@ -123,36 +158,53 @@ input[type=number] {
         <div class="row mt-4">
             <div class="col-12 col-lg-10 offset-lg-1">
                 <div class="row">
-                    <div class="col-12">
-                        <div class="text-center ">
-                        <img src="images/logo.png" alt="" style="width:270px;">
+                    
+                <div class="col-3">
+                        <div class="text-left ">
+                        <img src="images/logo.png" alt="" style="width:180px;">
                         
-                        </div>
-                        
-                    </div>
+                        </div></div>
+
+                        <div class="col-8">
+                        <div class="text-center">
+                        <h3 class="text-primary">CENTER FOR NON COMMUNICABLE DISEASES</h3>
+                        <p class="text-center text-danger">RESEARCH LABORATORY</p>
+                        </div></div>
+
+
                 </div>
                 <!-- .row -->
 
                 <hr class="row brc-default-l mx-n1 mb-4" size="3" />
 
-                <div class="row">
-                    <div class="col-sm-6">
+                <div class="row text-center">
+                    <div class="col-sm-4">
                         <div>
-                            <span class="text-600 text-110  align-middle">MR NO :</span>
-                            <span class="text-600 text-110  align-middle"><b>KHI-5896</b> </span>
+                            <span class="text-600 text-110  align-middle">STUDY ID :</span>
+                            <span class="text-600 text-110  align-middle"><b><?php echo $sampleid ?></b> </span>
                         </div>
                         <div class="text-grey-m2">
                             <div class="my-1">
-                                NAME: <b>Shazia Sulman</b> 
+                                NAME: <b><?php echo $pname ?></b> 
                             </div>
-                            <div class="my-1">
-                               Gender: <b>Female</b> 
-                            </div>
+                          
                         </div>
                     </div>
                     <!-- /.col -->
+                    <div class="col-sm-4">
+                        <div>
+                            <span class="text-600 text-110  align-middle">CENTER :</span>
+                            <span class="text-600 text-110  align-middle"><b><?php echo $center ?></b> </span>
+                        </div>
+                        <div class="text-grey-m2">
+                            <div class="my-1">
+                               AGE: <b><?php echo $page ?></b> 
+                            </div>
+                            
+                        </div>
+                    </div>
 
-                    <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
+                    <div class="text-95 col-sm-4 align-self-start d-sm-flex justify-content-end">
                         <div class="text-grey-m2">
                             
 
@@ -160,10 +212,10 @@ input[type=number] {
                         </div>
                         <div class="text-grey-m2">
                             <div class="my-1">
-                                Referred by: <b>Self</b> 
+                                DATE: <b><?php echo $studydate ?></b> 
                             </div>
                             <div class="my-1">
-                              Sample Date: <b>28/12/2021</b> 
+                              GENDER: <b><?php echo $pgender ?></b> 
                             </div>
                         </div>
 
@@ -189,19 +241,19 @@ input[type=number] {
   <tbody>
     <tr>
       <td>Random Blood Glucose</td>
-      <td>89.2</td>
+      <td><?php echo $glu ?></td>
       <td> &lt; 200mg/dl</td>
     </tr>
     <tr>
       <td>Serum Cholesterol</td>
-      <td>140.1</td>
+      <td><?php echo $chlo ?></td>
       <td>"Without known coronary artery disease; ≤ 200 mg/dl: Desirable.
 With known coronary artery disease;≤160 mg/dl:Optimal."	
 </td>
     </tr>
     <tr>
     <td>Serum Triglycerides</td>
-      <td >152.5
+      <td ><?php echo $tg ?>
 </td>
       <td>46-236mg/dl 
 </td>
@@ -209,7 +261,7 @@ With known coronary artery disease;≤160 mg/dl:Optimal."
     <tr>
     <td>HDL
 </td>
-      <td >43
+      <td ><?php echo $hdl ?>
 
 </td>
       <td>"Without known coronary artery disease; ≥ 35 mg/dl:Desirable.
@@ -221,29 +273,19 @@ With known coronary artery disease; ≥ 35 mg/dl:Optimal."
     <tr>
       <td>LDL
 </td>
-    <td>66.6
+    <td><?php echo $ldl ?>
 </td>
     <td>"Without known coronary artery disease; ≤ 130 mg/dl:Desirable.
 With known coronary artery disease; ≤ 100 mg/dl:Optimal."	
 </td>
   </tr>
 
-    <tr><td>
-    LDL
 
-    </td>
-    <td>31
-</td>
-    <td>"Without known coronary artery disease; ≤ 130 mg/dl:Desirable.
-With known coronary artery disease; ≤ 100 mg/dl:Optimal."	
-
-</td>
-  </tr>
 
     <tr>
       <td>VLDL
 </td>
-    <td>31
+    <td><?php echo $vldl ?>
 </td>
     <td>Normal VLDL levels are from 2 to 30 mg/Dl
 </td>
@@ -251,15 +293,21 @@ With known coronary artery disease; ≤ 100 mg/dl:Optimal."
     <tr>
       <td>Serum Creatinine
 </td>
-    <td>1.03
+    <td><?php echo $creat ?>
 </td>
     <td>0.6 – 1.5 mg/dl
 </td>
   </tr>
+
+<?php
+if(!empty($astl))
+{
+?>
+
   <tr>
       <td>AST (SGOT)
 </td>
-    <td>25.9
+    <td><?php echo $astl ?>
 </td>
     <td>< 35 U/I
 </td>
@@ -268,13 +316,16 @@ With known coronary artery disease; ≤ 100 mg/dl:Optimal."
       <td>ALT (SGPT)
 
 </td>
-    <td>28
+    <td><?php echo $altl ?>
 
 </td>
     <td>< 45 U/I
 
 </td>
   </tr>
+
+<?php
+}?>
   </tbody>
 </table>
           </div>
@@ -284,13 +335,22 @@ With known coronary artery disease; ≤ 100 mg/dl:Optimal."
                     <!-- or use a table instead -->
                     
 
-              <p class="text-center mb-5 mt-5">Electronically verified On 28th of December, 2021. No Signature Required</p>
+              <small class="mt-5">This is a computer generated report this doesnot require any signature.</small> <br>
+              <small >This report is generated for research purpose only and should not be use for diagonastic purposes.</small>
+
 
                    
 
-                    <div>
-                       <div class="text-center">                     <img src="images/barcode.gif" alt="" srcset="" style="width:250px;">
+                    <div class="mt-5">
+                       <div class="text-center">                     
+                         
+
+                       <?php
+//  echo "<img alt='testing' src='barcode/barcode.php?size=40&text=".$sampleid."&print=true'/>";
+
+                       ?>
                        </div>
+
                        <hr />
                        <p class="text-center "> <i> Plot # 19/2, Sector 17, Near Bilal Chowrangi, korangi industrial Area, Karachi. <br>
 Phones +92 21 35111 090 – 102 (13 Lines) Website: www.cncd.org</i>

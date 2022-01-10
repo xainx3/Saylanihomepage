@@ -1,4 +1,700 @@
 <?php
+require_once('plugins/tcpdf/tcpdf.php'); 
+include "connection/connection.php";
+
+if(isset($_POST['pdf'])){
+
+  $studyid=$_POST['stid'];
+  $sdate=$_POST['rdate'];
+  
+  $sql1 = "SELECT *FROM `participantsinfocenter` as `pic` INNER JOIN `labvalues_lipid` as `lvl` on pic.study_id=lvl.study_id WHERE lvl.study_id='$studyid' AND lvl.study_date='$sdate'";
+ 
+
+  $result1 = mysqli_query($conn, $sql1);
+  
+  
+  while($row1 = mysqli_fetch_array($result1))  
+  
+  { 
+
+
+    $pgender  =   $row1['sex'];
+    $page     =   $row1['age'];
+    $pname    =   $row1['name'];
+    $chlo     =   $row1['chlo'];
+    $glu      =   $row1['glu'];
+    $creat    =   $row1['creat'];
+    $tg       =   $row1['tg'];
+    $hdl      =   $row1['hdl'];
+    $vldl     =   $row1['vldl'];
+    $astl     =   $row1['astl'];
+    $altl     =   $row1['altl'];
+    $ldl      =   $row1['ldl'];
+    $center   =   $row1['center'];
+  
+  }
+
+
+  class MYPDF extends TCPDF {
+
+    //Page header
+    public function Header() {
+        // Logo
+        $image_file = K_PATH_IMAGES.'logo_example.png';
+        $this->Image($image_file, 10, 10, 50, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        // Set font
+        $this->SetFont('helvetica', 'B', 14);
+        // Title
+        $this->Cell(0, 15, 'CENTER FOR NON COMMUNICABLE DISEASES', 0, false, 'C', 0, '', 0, false, 'S', 'S');
+        $this->SetY(15);
+        $this->SetFont('helvetica', 'B', 10);
+        
+        $this->Cell(220, 15, 'RESEARCH LABORATORY', 0, false, 'C', 0, '', 0, false, 'S', 'S');
+    
+  
+        $this->SetY(30);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        $this->writeHTML('<hr />', true, false, false, false, '');
+  
+    }
+  
+    // Page footer
+    public function Footer() {
+        // Position at 15 mm from bottom
+
+        $this->SetY(-23);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        $this->writeHTML('<p>This is a computer generated report this doesnot require any signature. <br/>
+        This report is generated for research purpose only and should not be use for diagonastic purposes.</p>', true, false, false, false, '');
+
+        $this->SetY(-14);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        $this->writeHTML('<hr/>', true, false, false, false, '');
+  
+        $this->SetY(-15);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        // Page number
+        $this->Cell(0, 10, 'Plot # 19/2, Sector 17, Near Bilal Chowrangi, korangi industrial Area, Karachi.', 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        $this->SetY(-10);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        $this->Cell(0, 10, 'Phones +92 21 35111 090 – 102 (13 Lines) Website: www.cncd.org.', 0, false, 'C', 0, '', 0, false, 'T', 'M');
+  
+      }
+  }
+  $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+  
+  $pdf->SetCreator(PDF_CREATOR);
+  $pdf->SetAuthor('CNCD');
+  $pdf->SetTitle('LIPID_PROFILE_'.$studyid.'_'.$sdate.'');
+  $pdf->SetSubject('REPORT');
+  
+  $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+  
+  $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+  $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+  
+  $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+  
+  $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+  $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+  $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+  
+  $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+  
+  $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+  
+  if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+      require_once(dirname(__FILE__).'/lang/eng.php');
+      $pdf->setLanguageArray($l);
+  }
+  
+  
+  $pdf->SetFont('times', '', 10);
+  
+  $pdf->AddPage();
+  
+  
+  $pdf->SetXY(20,35);
+  $tbl = <<<EOD
+  <table  cellpadding="2" cellspacing="1" width="100%">
+  
+   <tr >
+    <td>MR.NO : <b>$studyid</b> </td>
+    <td>CENTER:<b>$center</b> </td>
+    <td>DATE: <b>$sdate</b></td>
+  
+   </tr>
+   <tr >
+    <td>NAME: <b>$pname</b></td>
+    <td>AGE: <b>$page</b></td>
+    <td>GENDER: <b>$pgender</b></td>
+   </tr>
+  
+  </table>
+  EOD;
+  $pdf->writeHTML($tbl, true, false, false, false, '');
+  $pdf->SetFont('helvetica', 'I', 8);
+  $pdf->writeHTML('<hr />', true, false, false, false, '');
+  
+  
+  $pdf->SetFont('helvetica', 'BU', 16);
+  // Title
+  $pdf->Cell(0, 10, 'BIO-CHEMISTRY', 0, false, 'C', 0, '', 0, false, 'S', 'S');
+  
+  
+  $pdf->SetFont('dejavusans', '', 12);
+  
+  
+  $pdf->SetXY(20,70);
+  $tbl1 = '
+  <table border="1"  cellpadding="5" cellspacing="1" align="center">
+  <thead>
+    <tr>
+      <th scope="col"> <b>Test(s)</b></th>
+      <th scope="col"><b>Result(s)</b></th>
+      <th scope="col"><b>Range(s)</b></th>
+    </tr>
+  </thead>
+  <tbody>';
+  
+  
+  
+  $tbl1 .= '
+    <tr>
+      <td>Random Blood Glucose</td>
+      <td>'.$glu.' </td>
+      <td> &lt; 200mg/dl</td>
+    </tr>
+    <tr>
+      <td>Serum Cholesterol</td>
+      <td>'.$chlo.' </td>
+      <td>"Without known coronary artery disease ≤ 200 mg/dl: Desirable.
+  With known coronary artery disease ≤ 160 mg/dl:Optimal."	
+  </td>
+    </tr>
+    <tr>
+    <td>Serum Triglycerides</td>
+      <td >'.$tg.' 
+  </td>
+      <td>46-236mg/dl 
+  </td>
+    </tr>
+    <tr>
+    <td>HDL
+  </td>
+      <td >'.$hdl.'
+  
+  </td>
+      <td>"Without known coronary artery disease &#8805; 35 mg/dl:Desirable.
+  With known coronary artery disease; &#8805; 35 mg/dl:Optimal."	
+  
+  </td>
+    </tr>
+  
+    <tr>
+      <td>LDL
+  </td>
+    <td>'.$ldl.' 
+  </td>
+    <td>"Without known coronary artery disease; ≤ 130 mg/dl:Desirable.
+  With known coronary artery disease; ≤ 100 mg/dl:Optimal."	
+  </td>
+  </tr>
+  
+  
+  
+    <tr>
+      <td>VLDL
+  </td>
+    <td>'.$vldl.'
+  </td>
+    <td>Normal VLDL levels are from 2 to 30 mg/Dl
+  </td>
+  </tr>
+    <tr>
+      <td>Serum Creatinine
+  </td>
+    <td>'.$creat.' 
+  </td>
+    <td>0.6 – 1.5 mg/dl
+  </td>
+  </tr>';
+  
+  
+  if(!empty($astl))
+  {
+    $tbl1 .='
+  
+  <tr>
+      <td>AST (SGOT)
+  </td>
+    <td>'.$astl.' 
+  </td>
+    <td>< 35 U/I
+  </td>
+  </tr>
+  <tr>
+      <td>ALT (SGPT)
+  
+  </td>
+    <td>'.$altl.'
+  
+  </td>
+    <td>< 45 U/I
+  
+  </td>
+  </tr>';
+  }
+  
+  $tbl1 .='
+  </tbody>
+  </table>
+  ';
+  $pdf->writeHTML($tbl1, true, false, false, false, '');
+  $style = array(
+    'position' => '',
+    'align' => 'C',
+    'stretch' => false,
+    'fitwidth' => true,
+    'cellfitalign' => '',
+    'border' => true,
+    'hpadding' => 'auto',
+    'vpadding' => 'auto',
+    'fgcolor' => array(0,0,0),
+    'bgcolor' => false, //array(255,255,255),
+    'text' => true,
+    'font' => 'helvetica',
+    'fontsize' => 8,
+    'stretchtext' => 4
+);
+$style['position'] = 'C';
+
+$barcodedata=$studyid.'-'.$sdate;
+  // $pdf->write1DBarcode($studyid, 'C128A', '', '', '', 15, 0.4, $style, 'N');
+  
+  // ---------------------------------------------------------
+
+  $pdf->Output('LIPID-'.$studyid.'-'.$sdate.'.pdf', 'D');
+
+  
+}
+
+
+if(isset($_POST['pdfcbc'])){
+
+  $studyid=$_POST['stid'];
+  $sdate=$_POST['rdate'];
+  
+  $sql1 = "SELECT *FROM `participantsinfocenter` as `pic` INNER JOIN `labvalues_cbc` as `lvc` on pic.study_id=lvc.study_id WHERE lvc.study_id='$studyid' AND lvc.study_date='$sdate'";
+ 
+
+  $result1 = mysqli_query($conn, $sql1);
+  
+  
+  while($row1 = mysqli_fetch_array($result1))  
+  
+  { 
+
+
+    $pgender  =   $row1['sex'];
+    $page     =   $row1['age'];
+    $pname    =   $row1['name'];
+    $wbc     =   $row1['wbc'];
+    $rbc      =   $row1['rbc'];
+    $hgb    =   $row1['hgb'];
+    $hct       =   $row1['hct'];
+    $mcv      =   $row1['mcv'];
+    $mch     =   $row1['mch'];
+    $mchc     =   $row1['mchc'];
+    $plt     =   $row1['plt'];
+    $rdw_sd      =   $row1['rdw_sd'];
+    $rdw_cv      =   $row1['rdw_cv'];
+    $pdw      =   $row1['pdw'];
+    $mpv      =   $row1['mpv'];
+    $p_lcr      =   $row1['p_lcr'];
+    $pct      =   $row1['pct'];
+    $neut      =   $row1['neut'];
+    $lymph      =   $row1['lymph'];
+    $mono      =   $row1['mono'];
+    $eos      =   $row1['eos'];
+    $basso     =   $row1['basso'];
+    $center   =   $row1['center'];
+  
+  }
+
+
+  class MYPDF extends TCPDF {
+
+    //Page header
+    public function Header() {
+        // Logo
+        $image_file = K_PATH_IMAGES.'logo_example.png';
+        $this->Image($image_file, 10, 10, 50, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        // Set font
+        $this->SetFont('helvetica', 'B', 14);
+        // Title
+        $this->Cell(0, 15, 'CENTER FOR NON COMMUNICABLE DISEASES', 0, false, 'C', 0, '', 0, false, 'S', 'S');
+        $this->SetY(15);
+        $this->SetFont('helvetica', 'B', 10);
+        
+        $this->Cell(220, 15, 'RESEARCH LABORATORY', 0, false, 'C', 0, '', 0, false, 'S', 'S');
+    
+  
+        $this->SetY(30);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        $this->writeHTML('<hr />', true, false, false, false, '');
+  
+    }
+  
+    // Page footer
+    public function Footer() {
+        // Position at 15 mm from bottom
+
+        $this->SetY(-25);
+        // Set font
+        $this->SetFont('helvetica', '', 8);
+        $this->writeHTML('<p>This is a computer generated report this doesnot require any signature. <br/>
+        This report is generated for research purpose only and should not be use for diagonastic purposes.</p>', true, false, false, false, '');
+
+        $this->SetY(-14);
+        // Set font
+        $this->SetFont('helvetica', '', 8);
+        $this->writeHTML('<hr/>', true, false, false, false, '');
+  
+        $this->SetY(-15);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        // Page number
+        $this->Cell(0, 10, 'Plot # 19/2, Sector 17, Near Bilal Chowrangi, korangi industrial Area, Karachi.', 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        $this->SetY(-10);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        $this->Cell(0, 10, 'Phones +92 21 35111 090 – 102 (13 Lines) Website: www.cncd.org.', 0, false, 'C', 0, '', 0, false, 'T', 'M');
+  
+      }
+  }
+  $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+  
+  $pdf->SetCreator(PDF_CREATOR);
+  $pdf->SetAuthor('CNCD');
+  $pdf->SetTitle('CBC_'.$studyid.'_'.$sdate.'');
+  $pdf->SetSubject('REPORT');
+  
+  $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+  
+  $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+  $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+  
+  $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+  
+  $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+  $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+  $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+  
+  $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+  
+  $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+  
+  if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+      require_once(dirname(__FILE__).'/lang/eng.php');
+      $pdf->setLanguageArray($l);
+  }
+  
+  
+  $pdf->SetFont('times', '', 10);
+  
+  $pdf->AddPage();
+  
+  
+  $pdf->SetXY(20,35);
+  $tbl = <<<EOD
+  <table  cellpadding="2" cellspacing="1" width="100%">
+  
+   <tr >
+    <td>MR.NO : <b>$studyid</b> </td>
+    <td>CENTER:<b>$center</b> </td>
+    <td>DATE: <b>$sdate</b></td>
+  
+   </tr>
+   <tr >
+    <td>NAME: <b>$pname</b></td>
+    <td>AGE: <b>$page</b></td>
+    <td>GENDER: <b>$pgender</b></td>
+   </tr>
+  
+  </table>
+  EOD;
+  $pdf->writeHTML($tbl, true, false, false, false, '');
+  $pdf->SetFont('helvetica', 'I', 8);
+  $pdf->writeHTML('<hr />', true, false, false, false, '');
+  
+  
+  $pdf->SetFont('helvetica', 'BU', 16);
+  // Title
+  $pdf->Cell(0, 10, 'HAEMATOLOGY REPORT', 0, false, 'C', 0, '', 0, false, 'S', 'S');
+  
+  
+  $pdf->SetFont('dejavusans', '', 12);
+  
+  
+  $pdf->SetXY(20,70);
+  $tbl1 = '
+  <table border="1"  cellpadding="5" cellspacing="1" align="center">
+  <thead>
+    <tr>
+      <th scope="col"> <b>Test(s)</b></th>
+      <th scope="col"><b>Result(s)</b></th>
+      <th scope="col"><b>Range(s)</b></th>
+    </tr>
+  </thead>
+  <tbody>';
+  
+  
+  
+  $tbl1 .= '
+  <tr>
+    <td>WBC</td>
+    <td>'. $wbc .'[10^3/µL]</td>
+    <td> &lt; 4.0-10.0</td>
+  </tr>
+  <tr>
+    <td>RBC</td>
+    <td>'. $rbc .' [10^6/µL]</td>
+    <td>3.9-4.8
+</td>
+  </tr>
+  <tr>
+  <td>HGB</td>
+    <td >'. $hgb .'[g/dL]
+</td>
+    <td>12.0-15.0
+</td>
+  </tr>
+  <tr>
+  <td>HCT
+</td>
+    <td >'. $hct .'[%]
+
+</td>
+    <td>36-46
+
+</td>
+  </tr>
+
+  <tr>
+    <td>MCV
+</td>
+  <td>'. $mcv .' [fL]
+</td>
+  <td>	
+      80-100
+</td>
+</tr>
+
+
+
+  <tr>
+    <td>MCh
+</td>
+  <td>'. $mch .' [pg]
+</td>
+  <td>27-32
+</td>
+</tr>
+  <tr>
+    <td>MCHC
+</td>
+  <td>'. $mchc .' [g/dL]
+</td>
+  <td>31.5-34.5
+</td>
+</tr>
+
+
+
+<tr>
+    <td>PLT
+</td>
+  <td>'. $plt.' [10^3/µL]
+</td>
+  <td>150-400
+</td>
+</tr>
+<tr>
+    <td>RDW-SD
+
+</td>
+  <td>'. $rdw_sd.' [fL]
+
+</td>
+  <td>
+
+</td>
+</tr>
+<tr>
+    <td>RDW-CV
+
+</td>
+  <td>'. $rdw_cv.' [%]
+
+</td>
+  <td>
+[11.6-14]
+</td>
+</tr>
+<tr>
+    <td>PDW
+
+</td>
+  <td>'. $pdw.' [fL]
+
+</td>
+  <td>
+
+</td>
+</tr>
+<tr>
+    <td>MPV
+
+</td>
+  <td>'. $mpv.' [fL]
+
+</td>
+  <td>
+
+</td>
+</tr>
+<tr>
+    <td>P-LCR
+
+</td>
+  <td>'. $p_lcr.' [fL]
+
+</td>
+  <td>
+
+</td>
+</tr>
+<tr>
+    <td>PCT
+
+</td>
+  <td>'. $pct.' [%]
+
+</td>
+  <td>
+
+</td>
+</tr>
+<tr>
+    <td>NEUTROPHILS
+
+</td>
+  <td>'. $neut.' [%]
+
+</td>
+  <td>
+40-75
+</td>
+</tr>
+
+<tr>
+    <td>LYMPHOCYTES
+
+</td>
+  <td>'. $lymph.' [%]
+
+</td>
+  <td>
+20-45
+</td>
+</tr>
+<tr>
+    <td>MONOCYTES
+
+</td>
+  <td>'. $mono.' [%]
+
+</td>
+  <td>
+2-10
+</td>
+</tr>
+
+<tr>
+    <td>ESINOPHILS
+
+</td>
+  <td>'. $eos.' [fL]
+
+</td>
+  <td>
+01-06
+</td>
+</tr>
+
+<tr>
+    <td>BASOPHILS
+
+</td>
+  <td>'. $basso.' [%]
+
+</td>
+  <td>
+0-1
+</td>
+</tr>';
+    
+  
+  $tbl1 .='
+  </tbody>
+  </table>
+  ';
+
+
+
+  $pdf->writeHTML($tbl1, true, false, false, false, '');
+
+  $pdf->SetFont('helvetica', 'B', 12);
+  $pdf->SetY(255);
+  // Title
+  $pdf->Cell(0, 15, 'REMARKS: Test has been performed on "SYSMEX-XN350" ', 0, false, 'L', 0, '', 0, false, 'S', 'S');
+
+
+  $style = array(
+    'position' => '',
+    'align' => 'C',
+    'stretch' => false,
+    'fitwidth' => true,
+    'cellfitalign' => '',
+    'border' => true,
+    'hpadding' => 'auto',
+    'vpadding' => 'auto',
+    'fgcolor' => array(0,0,0),
+    'bgcolor' => false, //array(255,255,255),
+    'text' => true,
+    'font' => 'helvetica',
+    'fontsize' => 8,
+    'stretchtext' => 4
+);
+$style['position'] = 'C';
+
+  // $pdf->write1DBarcode($studyid, 'C128A', '', '', '', 15, 0.4, $style, 'N');
+  
+  // ---------------------------------------------------------
+
+  $pdf->Output('LIPID-'.$studyid.'-'.$sdate.'.pdf', 'I');
+
+  
+}
+
+
 $thispage='patd';
 
 session_start();
@@ -267,8 +963,8 @@ while($row1 = mysqli_fetch_array($result1))
               </div>
               <div class="card-body">
                 <div class="tab-content" id="custom-tabs-four-tabContent">
-                  <div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                  <table id="example1" class="table table-bordered table-striped text-center">
+                  <div class="tab-pane fade active show " id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+                  <table id="example1" class="table table-resposive table-bordered table-striped text-center">
       <thead>
       <tr>
         <th>BARCODE DATA</th>
@@ -431,12 +1127,26 @@ while($row1 = mysqli_fetch_array($result1))
                             </select>
                           </div>
     </td>
-    <td><a class="btn btn-app bg-success">
+    <td>
+    
+    <form action="" method="post">
+    
+    <input type="hidden" name="stid" value="'.$row1["study_id"].'">
+    <input type="hidden" name="rdate" value="'.$row1["study_date"].'">
+
+    
+    
+   
+    
+    <button type="submit" class="btn btn-app bg-success" name="pdf">
     <i class="fas fa-download"></i> Download
-                    </a></td>
+                    </button>
+                    
+                    </form>
+                    </td>
     
                           <td>    
-    <a class="btn btn-info btn-sm" href="report.php?sampleid=1">
+    <a class="btn btn-info btn-sm" href="report.php?sampleid='.$row1["study_id"].'&date='.$row1["study_date"].'">
         <i class="fas fa-pencil-alt">
         </i>
         View
@@ -453,7 +1163,69 @@ while($row1 = mysqli_fetch_array($result1))
 
 
 }
+$sql1 = "SELECT * FROM `labvalues_cbc` WHERE `study_id`='$patientid'";
+ 
+ 
+$result1 = mysqli_query($conn, $sql1);
 
+
+while($row1 = mysqli_fetch_array($result1))  
+{ 
+
+    
+  echo '<tr>
+
+
+    <td>'.$row1["study_id"].'</td>
+    <td>'.$row1["study_id"].'</td>
+    <td>CBC</td>
+    <td>'.$row1["study_date"].'</td>
+    <td>
+    <div class="form-group">
+                            <select class="form-control bg-success">
+                              <option>Pending</option>
+                              <option >Processing</option>
+                              <option Selected>Completed</option>
+                             
+                            </select>
+                          </div>
+    </td>
+    <td>
+    
+    <form action="" method="post">
+    
+    <input type="hidden" name="stid" value="'.$row1["study_id"].'">
+    <input type="hidden" name="rdate" value="'.$row1["study_date"].'">
+
+    
+    
+   
+    
+    <button type="submit" class="btn btn-app bg-success" name="pdfcbc">
+    <i class="fas fa-download"></i> Download
+                    </button>
+                    
+                    </form>
+                    </td>
+    
+                          <td>    
+    <a class="btn btn-info btn-sm" href="reportcbc.php?sampleid='.$row1["study_id"].'&date='.$row1["study_date"].'">
+        <i class="fas fa-pencil-alt">
+        </i>
+        View
+    </a>
+    
+    
+    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger1">
+        <i class="fas fa-trash">
+        </i>
+        Delete
+    </a></td>
+    </tr>';
+
+
+
+}
 
 ?> 
 
@@ -617,6 +1389,18 @@ while($row1 = mysqli_fetch_array($result1))
     if (window.history.replaceState) {
       window.history.replaceState(null, null, window.location.href);
     }
+
+
+    $(function() {
+    $('a[data-toggle="pill"]').on('click', function(e) {
+        window.localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = window.localStorage.getItem('activeTab');
+    if (activeTab) {
+        $('#custom-tabs-four-tab a[href="' + activeTab + '"]').tab('show');
+        window.localStorage.removeItem("activeTab");
+    }
+});
 
    
 </script>

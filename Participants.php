@@ -25,6 +25,32 @@ $age=$_POST['age'];
 $gender=$_POST['gender'];
 $contact=$_POST['contactno'];
 
+
+
+if(isset($_POST['edtav'])){
+$edtav=$_POST['edtav'];
+$geltubev=$_POST['geltubev'];
+$urinev=$_POST['urinev'];
+}
+
+else{
+  $edtav=0;
+$geltubev=0;
+$urinev=0;
+}
+if(isset($_POST['serumv'])){
+
+$serumv=$_POST['serumv'];
+$plasmav=$_POST['plasmav'];
+$urinepv=$_POST['urinepv'];
+
+}
+
+else{
+  $serumv=0;
+$plasmav=0;
+$urinep=0;
+}
 if(!isset($_POST['temp'])){
 
   $temp='N/A';
@@ -60,6 +86,11 @@ $insert = $conn->query("INSERT INTO `participantsinfocenter`(`study_id`, `sid_al
 '$contact','$temp','$cnic')");
     
 if($insert){
+
+  $insertsamples=$conn->query("INSERT INTO `samples`(`study_id`, `edta`, `geltube`, `urine`, `serum`, `plasma`, `urinep`, `stype`) 
+  VALUES ('$studyid','$edtav','$geltubev','$urinev','$serumv','$plasmav','$urinepv','$sampletype')");
+
+
       $statusMsg= "Toast.fire({
   icon: 'success',
   padding: '3em',  
@@ -121,10 +152,12 @@ echo mysqli_error($conn);
 }
 
 
-   .error{
+.error{
      color:red !important;
    }
-   .loader1{
+
+.loader1{
+
   position: relative;
   text-align: center;
   margin: 15px auto 35px auto;
@@ -181,7 +214,7 @@ echo mysqli_error($conn);
     </div>
 
 
-    <form method="POST" action="" enctype="multipart/form-data" id="registrationform" class="m-5 p-5 bg-dark rounded">
+    <form method="POST" action="" enctype="multipart/form-data" id="registrationform" class="m-5 p-5 bg-dark rounded" onsubmit="return validateForm()">
       <h1 class="text-center" style="margin: 0 0;">Enter Participant's Details</h1>
 
       <div class="card-body">
@@ -241,10 +274,107 @@ echo mysqli_error($conn);
                     </div>
 
 </div>
+
+
+<h4>Do you have raw samples or processed samples?</h4>
+
+<div class="row text-center mb-5">
+
+<div class="col-md-6">
+        <input class="btn btn-primary  w-100" type="button" id="raw" value=" RAW"/>
       
-  
-<div class="form-group col-md-12 text-center">
-                      <input type="submit" class="btn btn-lg btn-primary" value="submit" name="submit" >
+        </div>
+        <div class="col-md-6">
+        <input type="button" class="btn btn-primary w-100" id="processed" value="PROCESSED"/>
+       
+        </div>
+
+        </div>
+
+<div id="rawsamples">
+<h3 class="text-center">RAW SAMPLES</h3>
+<hr>
+<div class="row text-center">
+
+<div class="col-md-4 ">
+<label for="edta">
+        <input type="checkbox" id="edta"  name="edta"/>
+        ETDA
+    </label>
+    <div id="dvedta" style="display: none">
+        <input type="number"   name="edtav" id="edtav"/>
+    </div>
+
+</div>
+
+<div class="col-md-4">
+    <label for="geltube">
+        <input type="checkbox" id="geltube" name="geltube"/>
+        GEL TUBE
+    </label>
+    <div id="dvgeltube" style="display: none">
+        <input type="number"    name="geltubev" id="geltubev"/>
+    </div>
+    </div>
+
+    <div class="col-md-4">
+    <label for="urine">
+        <input type="checkbox" id="urine" name="urine" />
+        URINE
+    </label>
+    <div id="dvurine" style="display: none">
+        <input type="number"    name="urinev" id="urinev"/>
+    </div>
+    </div>
+
+    </div>
+    </div>
+
+<div id="processedsamples">
+
+    <h3 class="text-center mt-5">PROCESSED SAMPLES</h3>
+    <hr />  
+<div class="row text-center">
+
+<div class="col-md-4">
+
+    <label for="serum">
+        <input type="checkbox" id="serum" name="serum" />
+      SERUM
+    </label>
+    <div id="dvserum" style="display: none">
+        <input type="number"    name="serumv" id="serumv"/>
+    </div>
+
+</div>
+<div class="col-md-4">
+
+    <label for="plasma">
+        <input type="checkbox" id="plasma" name="plasma"/>
+        PLASMA
+    </label>
+    <div id="dvplasma" style="display: none">
+        <input type="number"    name="plasmav" id="plasmav"/>
+    </div>
+
+</div>
+<div class="col-md-4">
+
+    <label for="urines">
+        <input type="checkbox" id="urines" name="urinep"/>
+        URINE (Small Tubes)
+    </label>
+    <div id="dvurines" style="display: none">
+        <input type="number"   name="urinepv" id="urinepv"/>
+    </div>
+
+</div>
+
+    </div>
+    </div>
+   
+<div class="form-group col-md-12 text-center mt-5">
+                      <input type="submit" class="btn btn-lg btn-primary" value="submit" name="submit" id="submitbtn">
                     </div>
      
      
@@ -447,7 +577,107 @@ const Toast = Swal.mixin({
       "autoWidth": true,
       "responsive": true,
     });
-   
+
+
+
+    $(function () {
+
+      $("#rawsamples").hide();
+      $("#processedsamples").hide();
+      $("#submitbtn").hide();
+
+      $("#raw").click(function () {
+          
+        $("#rawsamples").show();
+        $("#submitbtn").show();
+        $("#processedsamples").hide();
+
+            });
+
+            $("#processed").click(function () {
+
+              $("#rawsamples").hide();
+      $("#processedsamples").show();
+      $("#submitbtn").show();
+              });
+    });
+
+    $(function () {
+            $("#edta").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#dvedta").show();
+                    $("#edtav").val('3');
+                } else {
+                    $("#dvedta").hide();
+                    $("#edtav").val('0');
+                }
+            });
+            $("#geltube").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#dvgeltube").show();
+                    $("#geltubev").val('3');
+                } else {
+                    $("#dvgeltube").hide();
+                    $("#geltubev").val('0');
+                }
+            });
+            $("#urine").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#dvurine").show();
+                    $("#urinev").val('1');
+                } else {
+                    $("#dvurine").hide();
+                    $("#urinev").val('0');
+                }
+            });
+            $("#serum").click(function () {
+                if ($(this).is(":checked")) {
+                  
+                    $("#dvserum").show();
+                    $("#serumv").val('3');
+                } else {
+                    $("#dvserum").hide();
+                    $("#serumv").val('0');
+                }
+            });
+            $("#plasma").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#dvplasma").show();
+                    $("#plasmav").val('3');
+                } else {
+                    $("#dvplasma").hide();
+                    $("#plasmav").val('0');
+                }
+            });
+            $("#urines").click(function () {
+                if ($(this).is(":checked")) {
+                    $("#dvurines").show();
+                    $("#urinepv").val('1');
+                } else {
+                    $("#dvurines").hide();
+                    $("#urinepv").val('0');
+                }
+            });
+        });
+
+        function validateForm() {
+ 
+  if ($('#serum').is(":checked") || $('#edta').is(":checked") ) {
+    return true;
+  }
+
+  else{
+    Toast.fire({
+  icon: 'error',
+  padding: '3em',  
+  background: '#EBECEC',
+  title: 'Samples Not Selected!'
+  });
+            return false;
+        }
+
+  }
+
     </script>
 </body>
 </html>

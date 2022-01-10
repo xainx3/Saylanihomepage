@@ -275,6 +275,7 @@ const Toast = Swal.mixin({
         'bSortable': false,
         'aTargets': ['nosort']
     }],
+    
       'columns': [
          { data: 'study_id' },
          { data: 'name' },
@@ -286,6 +287,8 @@ const Toast = Swal.mixin({
       ]
    });
 });
+
+
 
   if (window.history.replaceState) {
       window.history.replaceState(null, null, window.location.href);
