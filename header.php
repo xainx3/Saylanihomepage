@@ -78,7 +78,7 @@
 
 
                 <li class="nav-item">
-            <a href="Participants.php" class="nav-link <?php if ($thispage == 'prreg') {echo  "active"; } ?>">
+            <a href="Participants.php" class="nav-link <?php if ($thispage == 'parti') {echo  "active"; } ?>">
               <i class=" nav-icon fas fa-vial"></i>
               <p>
               Participant's Registration

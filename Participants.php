@@ -1,6 +1,6 @@
 <?php
 session_start();
-$thispage='sample';
+$thispage='parti';
 include "connection/connection.php";
 
 
