@@ -28,9 +28,9 @@ $contact=$_POST['contactno'];
 
 
 if(isset($_POST['edtav'])){
-$edtav=$_POST['edtav'];
-$geltubev=$_POST['geltubev'];
-$urinev=$_POST['urinev'];
+$edtav=(int)$_POST['edtav'];
+$geltubev=(int)$_POST['geltubev'];
+$urinev=(int)$_POST['urinev'];
 }
 
 else{
@@ -40,9 +40,9 @@ $urinev=0;
 }
 if(isset($_POST['serumv'])){
 
-$serumv=$_POST['serumv'];
-$plasmav=$_POST['plasmav'];
-$urinepv=$_POST['urinepv'];
+$serumv=(int)$_POST['serumv'];
+$plasmav=(int)$_POST['plasmav'];
+$urinepv=(int)$_POST['urinepv'];
 
 }
 
@@ -51,6 +51,23 @@ else{
 $plasmav=0;
 $urinep=0;
 }
+
+
+
+
+if($edtav>0){
+  $sampletype="RAW";
+
+
+}
+
+if($serumv>0){
+  $sampletype="PROCESSED";
+
+
+}
+
+
 if(!isset($_POST['temp'])){
 
   $temp='N/A';
@@ -67,7 +84,7 @@ else{
   $cnic=$_POST['cnic'];
 }
 
-$query= "select * from `participantsinfocenter` where `study_id`='$studyid' ";
+$query= "select *from `participantsinfocenter` where `study_id`='$studyid' ";
 $result= mysqli_query($conn, $query);
 
 if(mysqli_num_rows($result)>0){
@@ -86,6 +103,66 @@ $insert = $conn->query("INSERT INTO `participantsinfocenter`(`study_id`, `sid_al
 '$contact','$temp','$cnic')");
     
 if($insert){
+
+
+
+if($edtav>0){
+for($i=1;$i<=$edtav;$i++){
+
+  $sampleid=$studyid.'-ED-'.$i;
+  $samplename='EDTA-'.$i;
+  $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+}
+}
+
+
+if($geltubev>0){
+  for($i=1;$i<=$geltubev;$i++){
+  
+    $sampleid=$studyid.'-GT-'.$i;
+    $samplename='GELTUBE-'.$i;
+    $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+  }
+  }
+
+  if($urinev>0){
+    for($i=1;$i<=$urinev;$i++){
+    
+      $sampleid=$studyid.'-UR-'.$i;
+      $samplename='URINE-'.$i;
+      $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+    }
+    }
+
+    if($serumv>0){
+      for($i=1;$i<=$serumv;$i++){
+      
+        $sampleid=$studyid.'-S-'.$i;
+        $samplename='SERUM-'.$i;
+        $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+      }
+      }
+
+      if($plasmav>0){
+        for($i=1;$i<=$plasmav;$i++){
+        
+          $sampleid=$studyid.'-P-'.$i;
+          $samplename='PLASMA-'.$i;
+          $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+        }
+        }
+
+        if($urinepv>0){
+          for($i=1;$i<=$urinepv;$i++){
+          
+            $sampleid=$studyid.'-UP-'.$i;
+            $samplename='URINE-'.$i;
+            $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+          }
+          }
+
+
+
 
   $insertsamples=$conn->query("INSERT INTO `samples`(`study_id`, `edta`, `geltube`, `urine`, `serum`, `plasma`, `urinep`, `stype`) 
   VALUES ('$studyid','$edtav','$geltubev','$urinev','$serumv','$plasmav','$urinepv','$sampletype')");
@@ -266,7 +343,7 @@ echo mysqli_error($conn);
         
           <div class="form-group col-md-6">
                       <label >Temprature &#8451;</label>
-                      <input type="name" class="form-control"  placeholder="Enter Temprature of Sample" name="temp"  >
+                      <input type="number" class="form-control"  placeholder="Enter Temprature of Sample" name="temp"  >
                     </div>
                     <div class="form-group col-md-12 mb-5">
                       <label >CNIC</label>

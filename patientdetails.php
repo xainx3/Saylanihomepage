@@ -803,6 +803,8 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+
 </style>
 
 </head>
@@ -898,7 +900,7 @@ while($row1 = mysqli_fetch_array($result1))
                     </div>
                     <div class="form-group col-md-6">
                       <label >Contact</label>
-                      <input type="name" class="form-control"   name="contact" required value="<?php echo   $contactnumber ?>">
+                      <input type="number" class="form-control"   name="contact" required value="<?php echo   $contactnumber ?>">
                     </div>
   
                     <div class="form-group col-md-6">
@@ -973,31 +975,92 @@ while($row1 = mysqli_fetch_array($result1))
         <th>DATE OF EXTRACTION</th>
         <th>STATUS</th>
         <th>STORAGE LOCATION</th>        
-        <th>VIEW DETAILS</th>
+        <th>SETTINGS</th>
       </tr>
       </thead>
       <tbody >    
+      <?php
 
-<tr>
+$samplequery = "SELECT *FROM `samplesdata` WHERE `study_id`='$patientid'";
+ 
+ 
+$sampleresult = mysqli_query($conn, $samplequery);
 
 
-<td>FY-5025-bb4c61d7664de191 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>EDTA</td>
-<td>27/12/2021</td>
+while($sampleresultrow = mysqli_fetch_array($sampleresult))  
+{ 
+
+  
+
+echo 
+
+'<tr>
+<td>'.$sampleresultrow["sample_id"].'</td>
+<td><img alt="barcode" src="barcode/barcode.php?size=40&text='.$sampleresultrow["sample_id"].'&print=true"/></td>
+
+<td>'.$sampleresultrow["sample_name"].'</td>
+
+<td>'.$sampleresultrow["date_of_extraction"].'</td>
 <td>
 <div class="form-group">
-                        <select class="form-control bg-primary">
-                          <option>Pending</option>
-                          <option >Processing</option>
-                          <option Selected>Storage</option>
-                         
-                        </select>
+<select class="form-control " name="status" id='.$sampleresultrow["sdid"].'>';
+
+
+$query = "SELECT *  FROM `status`";
+$result = mysqli_query($conn,$query);
+while($row = mysqli_fetch_array($result)) {
+    if ($sampleresultrow["sample_status"] == $row['statusid']){
+
+   echo'<option value='.$row["statusid"].'  selected>'.$row["status_name"].'</option>';
+
+if($row["statusid"]=='1'){
+
+  echo '<script> document.getElementById("'.$sampleresultrow["sdid"].'").classList.add("bg-danger");
+  document.getElementById("'.$sampleresultrow["sdid"].'").style.color = "white";
+  </script>';
+}
+
+if($row["statusid"]=='2'){
+
+  echo '<script> document.getElementById("'.$sampleresultrow["sdid"].'").classList.add("bg-success");
+  document.getElementById("'.$sampleresultrow["sdid"].'").style.color = "white";
+  </script>';
+}
+
+if($row["statusid"]=='3'){
+
+  echo '<script> document.getElementById("'.$sampleresultrow["sdid"].'").classList.add("bg-warning");
+  document.getElementById("'.$sampleresultrow["sdid"].'").style.color = "white";
+  </script>';
+}
+if($row["statusid"]=='4'){
+
+  echo '<script> document.getElementById("'.$sampleresultrow["sdid"].'").classList.add("bg-primary");
+  document.getElementById("'.$sampleresultrow["sdid"].'").style.color = "white";
+  </script>';
+}
+
+ }
+
+ else {
+
+  echo'<option value='.$row["statusid"].'>'.$row["status_name"].'</option>';
+
+     } }
+ 
+echo' </select>
                       </div>
 </td>
-<td>F1->R2->C5</td>
 
-                      <td>    
+<td></td>
+
+<td>   
+
+<a class="btn btn-warning btn-sm" href="#" data-toggle="modal" data-target="#M'.$sampleresultrow["sdid"].'">
+<i class="nav-icon far fa-snowflake"></i>
+    </i>
+    Store
+</a>
 <a class="btn btn-info btn-sm" href="sampledetail.php?sampleid=1">
     <i class="fas fa-pencil-alt">
     </i>
@@ -1011,75 +1074,80 @@ while($row1 = mysqli_fetch_array($result1))
     Delete
 </a></td>
 </tr>
-<tr>
 
+<div class="modal fade" id="M'.$sampleresultrow["sdid"].'" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <form method="POST" action="" enctype="multipart/form-data">
+                  <div class="card-body">
+                    <div class="row">
+                  <div class="form-group col-md-6">
+                      <label >Study ID</label>
+                      <input type="name" class="form-control bg-secondary text-white"   name="mrno" required value="'.$sampleresultrow["study_id"].'" readonly>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="exampleInputEmail1">Sample ID</label>
+                      <input type="name" class="form-control bg-secondary text-white" id="exampleInputEmail1"  name="name" value="'.$sampleresultrow["sample_id"].'" readonly required >
+                    </div>
+                    <div class="form-group col-md-6">
+                    <label for="exampleInputEmail1">Select Room</label>
 
-<td>FY-5025-5a0574530619ccc9 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>Gel Tube</td>
-<td>27/12/2021</td>
-
-<td><div class="form-group">
-                        <select class="form-control bg-warning">
-                          <option>Pending</option>
-                          <option selected>Processing</option>
-                          <option >Storage</option>
-                         
-                        </select>
-                      </div></td>
-                      <td>F1->R2->C4</td>
-                      <td>    
-<a class="btn btn-info btn-sm" href="serum.php?sampleid=2">
-    <i class="fas fa-pencil-alt">
-    </i>
-    View
-</a>
-
-
-<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger2">
-    <i class="fas fa-trash">
-    </i>
-    Delete
-</a></td>
-</tr>
-<tr>
-
-
-<td>FY-5025-0c14b283f1817f24 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>Urine</td>
-<td>27/12/2021</td>
-
-<td><div class="form-group">
-                        <select class="form-control bg-danger">
-                          <option Selected>Pending</option>
-                          <option >Processing</option>
-                          <option >Completed</option>
-                         
-                        </select>
-                      </div></td>
-                      <td>F1->R2->C3</td>
-                      <td>    
-<a class="btn btn-info btn-sm" href="urine.php?sampleid=3">
-    <i class="fas fa-pencil-alt">
-    </i>
-    View
-</a>
-
-
-<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger3">
-    <i class="fas fa-trash">
-    </i>
-    Delete
-</a></td>
-</tr>
-<tr>
+                     <select class="form-control " name="roomselect" id="roomselect">';
 
 
 
+$query = "SELECT *  FROM `freezerroom`";
+$result = mysqli_query($conn,$query);
+echo '<option value="0">Select Storage Room</option>';
+
+while($row = mysqli_fetch_array($result)) {   
+
+   echo'<option value='.$row["frid"].' >'.$row["roomname"].'</option>';
+
+ } 
+ 
+echo' </select>
 
 
-      </tbody>
+                    </div>
+                    <div class="form-group col-md-6" id="freezerdiv">
+                      <label for="exampleInputEmail1">Select Freezer</label>
+                      <select class="form-control " name="status" id="freezers">
+                      <option value="0">Select Freezer</option>
+                    </select>
+                    </div>
+               
+                    
+  
+                 
+                       
+
+                    </div>
+  
+  </div>
+  <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" name="update">Update</button>
+                  </div>
+                  </div>
+  
+                
+                 
+                </form>
+      </div>
+    
+    </div>
+  </div>
+</div>
+';
+
+}
+?> 
+ </tbody>
     
     </table>                     </div>
                   <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
@@ -1402,7 +1470,105 @@ while($row1 = mysqli_fetch_array($result1))
     }
 });
 
-   
+
+$('select').on('change', function (e) {
+    var optionSelected = $("option:selected", this);
+    var valueSelected = this.value;
+
+
+
+    var invoiceId=this.id;
+    var dataString = 'value='+ valueSelected + '&invoiceid=' + invoiceId;
+
+
+
+   event.preventDefault();
+  $.ajax({
+    method: "GET",
+    url: "statusupdate.php",
+    data: dataString,
+
+  
+    success: function(textStatus, status){
+      console.log(textStatus);
+        console.log(status);
+        alert('Status Updated Successfully');
+        location.reload();
+        
+        
+    },
+    error: function(xhr, textStatus, error) {
+        console.log(xhr.responseText);
+        console.log(xhr.statusText);
+        console.log(textStatus);
+        console.log(error);
+    }
+  });
+    
+    });
+
+    $('#roomselect').on('change', function (e) {
+    var optionSelected = $("option:selected", this);
+    var valueSelected = this.value;
+    var dataString = 'roomvalue='+ valueSelected ;
+  
+   event.preventDefault();
+  $.ajax({
+    method: "GET",
+    url: "statusupdate.php",
+    data: dataString,
+
+  
+    success: function(textStatus, status){
+      console.log(textStatus);
+        console.log(status);
+        $('#freezers').append(textStatus);
+        
+        
+    },
+    error: function(xhr, textStatus, error) {
+        console.log(xhr.responseText);
+        console.log(xhr.statusText);
+        console.log(textStatus);
+        console.log(error);
+    }
+  });
+    
+    });
+
+    $('#freezers').on('change', function (e) {
+    var optionSelected = $("option:selected", this);
+    var valueSelected = this.value;
+    var dataString = 'freezervalue='+ valueSelected ;
+  
+
+
+    event.preventDefault();
+
+    $.ajax({
+    method: "GET",
+    url: "statusupdate.php",
+    data: dataString,
+      
+      success: function(textStatus, status){
+      console.log(textStatus);
+      console.log(status);
+      $( "#freezerdiv" ).after(textStatus);
+        
+        
+    },
+    error: function(xhr, textStatus, error) {
+        console.log(xhr.responseText);
+        console.log(xhr.statusText);
+        console.log(textStatus);
+        console.log(error);
+    }
+  });
+    
+    });
+ 
+
+
 </script>
 </body>
 </html>

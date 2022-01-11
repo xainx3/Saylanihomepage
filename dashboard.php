@@ -33,6 +33,50 @@ if(!isset($_SESSION["id"])){
       } 
     
     }
+
+   
+    $totalpart= "SELECT *FROM `participantsinfocenter`";
+ 
+ 
+    $totalpartnum = mysqli_query($conn,  $totalpart);
+
+    $totalpartnum=(int)mysqli_num_rows ($totalpartnum);
+
+    $totallipid= "SELECT *FROM `labvalues_lipid`";
+ 
+    $totallipidnum = mysqli_query($conn, $totallipid);
+
+    $totalcbc= "SELECT *FROM `labvalues_cbc`";
+ 
+    $totalcbcnum = mysqli_query($conn, $totalcbc);
+
+    $totalreports=(int)mysqli_num_rows ($totallipidnum) + (int)mysqli_num_rows ($totalcbcnum);
+
+
+    $todayregis="SELECT * FROM `participantsinfocenter` WHERE (`timestamp` > DATE_SUB(now(), INTERVAL 1 DAY))";
+    $todayregisnum = mysqli_query($conn, $todayregis);
+    $todayregisnum=(int)mysqli_num_rows ($todayregisnum);
+
+    function thousandsCurrencyFormat($num) {
+
+      if($num>1000) {
+    
+            $x = round($num);
+            $x_number_format = number_format($x);
+            $x_array = explode(',', $x_number_format);
+            $x_parts = array('k', 'm', 'b', 't');
+            $x_count_parts = count($x_array) - 1;
+            $x_display = $x;
+            $x_display = $x_array[0] . ((int) $x_array[1][0] !== 0 ? '.' . $x_array[1][0] : '');
+            $x_display .= $x_parts[$x_count_parts - 1];
+    
+            return $x_display;
+    
+      }
+    
+      return $num;
+    }
+
 ?>
 
 
@@ -108,9 +152,24 @@ if($_SESSION['role']!="DE"){
       <!-- small box -->
       <div class="small-box bg-info">
         <div class="inner">
-          <h3>160</h3>
+          <h3>'.thousandsCurrencyFormat($totalpartnum).'</h3>
 
-          <p>Total Samples</p>
+          <p>Total Participants</p>
+        </div>
+        <div class="icon">
+        <i class="fas fa-users"></i>
+        </div>
+        <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+      </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-success">
+        <div class="inner">
+          <h3>'.thousandsCurrencyFormat($totalreports).'</h3>
+
+          <p>Total Test Results</p>
         </div>
         <div class="icon">
         <i class="fas fa-vials"></i>
@@ -121,26 +180,11 @@ if($_SESSION['role']!="DE"){
     <!-- ./col -->
     <div class="col-lg-3 col-6">
       <!-- small box -->
-      <div class="small-box bg-success">
-        <div class="inner">
-          <h3>126</h3>
-
-          <p>Received Samples</p>
-        </div>
-        <div class="icon">
-        <i class="fas fa-mail-bulk"></i>
-        </div>
-        <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
-      </div>
-    </div>
-    <!-- ./col -->
-    <div class="col-lg-3 col-6">
-      <!-- small box -->
       <div class="small-box  bg-danger">
         <div class="inner">
-          <h3>24</h3>
-
-          <p>In Transit</p>
+          <h3>'.thousandsCurrencyFormat($todayregisnum).'</h3>
+         
+          <p>Participants Registered Today</p>
         </div>
         <div class="icon">
         <i class="fas fa-truck-moving"></i>
@@ -155,7 +199,7 @@ if($_SESSION['role']!="DE"){
         <div class="inner">
           <h3>10</h3>
 
-          <p>In Process</p>
+          <p>Tests Performed Today</p>
         </div>
         <div class="icon">
         <i class="fas fa-spinner"></i>
