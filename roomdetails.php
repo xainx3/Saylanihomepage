@@ -1,5 +1,5 @@
 <?php
-$thispage='patd';
+$thispage = 'storage';
 
 session_start();
 include "connection/connection.php";
@@ -37,7 +37,7 @@ if(isset($_POST['updateroom'])){
       icon: 'success',
       padding: '3em',  
       background: '#EBECEC',
-      title: ' Room Added Successfully.'
+      title: ' Room Updated Successfully.'
       });";               
         
     }
@@ -156,7 +156,7 @@ while($row1 = mysqli_fetch_array($result1))
                 </div>
 
                 <div class="col-md-12 text-center mb-5">
-                  <button type="submit" class="btn btn-primary btn-block btn-lg" name="updateroom">ADD</button>
+                  <button type="submit" class="btn btn-primary btn-block btn-lg" name="updateroom">Update</button>
                 </div>
                
               </form>

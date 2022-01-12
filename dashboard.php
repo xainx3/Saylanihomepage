@@ -337,6 +337,52 @@ const Toast = Swal.mixin({
   if (window.history.replaceState) {
       window.history.replaceState(null, null, window.location.href);
     }
+
+    $(document).ready(function() {
+  setTimeout(function() {
+    $('select').on('change', function (e) {
+    var optionSelected = $("option:selected", this);
+    var valueSelected = this.value;
+    var invoiceId=this.id;
+    var dataString = 'dashboardstatusvalue='+ valueSelected + '&dashboardstatusselect=' + invoiceId;
+
+    event.preventDefault();
+
+    $.ajax({
+    method: "GET",
+    url: "statusupdate.php",
+    data: dataString,
+
+  
+    success: function(textStatus, status){
+      console.log(textStatus);
+        console.log(status);
+
+        Toast.fire({
+        icon: 'success',
+        padding: '3em',
+        background: '#EBECEC',
+        title: 'Status Updated Successfully'
+      });
+
+  $(document).ready(function() {
+  setTimeout(function() {
+        location.reload();
+        
+      });
+  }, 3000);
+    },
+    error: function(xhr, textStatus, error) {
+        console.log(xhr.responseText);
+        console.log(xhr.statusText);
+        console.log(textStatus);
+        console.log(error);
+    }
+  });
+    
+    });
+  }, 1000);
+});
 </script>
 </body>
 </html>

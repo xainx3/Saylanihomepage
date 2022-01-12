@@ -42,6 +42,32 @@ $data = array();
 
 while ($row = mysqli_fetch_assoc($empRecords)) {
 
+
+  if($row["parti_status"]==1)
+  {
+  
+  $selectop='<div class="form-group">
+  <select class="form-control bg-danger dashboardselect" id="'.$row["study_id"].'">
+    <option value="1" selected>Pending Approval</option>
+    <option value="2">Received</option>       
+  </select>
+  </div>';
+  
+  }
+  
+ else
+  {
+  
+    $selectop='<div class="form-group">
+    <select class="form-control bg-success dashboardselect" id="'.$row["study_id"].'">
+    <option value="1">Pending Approval</option>
+    <option value="2" selected>Received</option>      
+    </select>
+    </div>';
+  
+  }
+
+
 if($_SESSION['role']=="DE"){
 $deletebtn="";
 }
@@ -79,18 +105,15 @@ Delete
 }
 
 
+
+
    $data[] = array( 
       "study_id"=>$row['study_id'],
       "name"=>$row['name'],
       "age"=>$row['age'],
       "sex"=>$row['sex'],
       "contact_number"=>$row['contact_number'],
-      "status"=>'<div class="form-group">
-      <select class="form-control bg-success" >
-        <option>Pending Approval</option>
-        <option selected>Received</option>       
-      </select>
-    </div>',
+      "status"=>$selectop,
     "optionbtns"=>"<a class='btn btn-info btn-sm' href='patientdetails.php?patientid=".$row['study_id']."'>
     <i class='fas fa-pencil-alt'>
     </i>

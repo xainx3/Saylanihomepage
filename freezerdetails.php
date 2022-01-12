@@ -1,5 +1,5 @@
 <?php
-$thispage='patd';
+$thispage = 'storage';
 
 session_start();
 include "connection/connection.php";

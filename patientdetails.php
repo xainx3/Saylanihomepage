@@ -769,7 +769,88 @@ if($insert){
 
 }
 
+if(isset($_POST['storesample'])){
 
+
+
+  $studyid=$_POST['mrno'];
+  $sampleid=$_POST['sampleid'];
+  $room=$_POST['roomselect'];
+  $freezer=$_POST['freezer'];
+  $freezerrow=$_POST['frow'];
+  $freezercolumn=$_POST['fcolumn'];
+  
+
+  $sample_location=$room.'->'.$freezer.'->'.$freezerrow.'->'.$freezercolumn;
+  
+  $query= "select *from `samples_storage_location` where `study_id`='$studyid' AND `sample_id`='$sampleid' ";
+  $result= mysqli_query($conn, $query);
+  
+  if(mysqli_num_rows($result)>0){
+
+    $updatesamplelocation = $conn->query("UPDATE `samples_storage_location` SET `freezer_room`='$room',
+    `freezer`='$freezer',`freezer_rows`='$freezerrow',
+    `freezer_columns`='$freezercolumn',`location`='$sample_location' WHERE `study_id`='$studyid' AND `sample_id`='$sampleid'");
+
+
+
+    $statusMsg= "Toast.fire({
+      icon: 'success',
+      padding: '3em',  
+      background: '#EBECEC',
+      title: '&nbsp; Location Updated Successfully'
+    });";
+  
+  }
+else{
+  $insertsamplelocation = $conn->query("INSERT INTO `samples_storage_location`(`study_id`, `sample_id`, 
+  `freezer_room`, `freezer`, `freezer_rows`, `freezer_columns`, `location`) 
+  VALUES ('$studyid','$sampleid','$room','$freezer','$freezerrow',
+  '$freezercolumn','$sample_location')");
+
+  $samplestatusupdate = $conn->query("UPDATE `samplesdata` SET `sample_status`='4' WHERE `study_id`='$studyid' AND `sample_id`='$sampleid'"); 
+  
+  if($insertsamplelocation && $samplestatusupdate){
+        $statusMsg= "Toast.fire({
+    icon: 'success',
+    padding: '3em',  
+    background: '#EBECEC',
+    title: 'Sample Stored Successfully.'
+    });";               
+      
+  }
+  
+}
+  
+  
+  
+  }
+
+
+  if(isset($_POST['deletesample'])){
+
+    $dsid=$_POST['dsid'];
+    
+     
+    $delete = $conn->query("DELETE FROM `samplesdata` WHERE `sdid`='$dsid'");
+    if($delete){
+      $statusMsg= "Toast.fire({
+    icon: 'success',
+    padding: '3em',  
+    background: '#EBECEC',
+    title: ' Sample Deleted Successfully.'
+    });";               
+    }else{
+        echo mysqli_error($conn); 
+      $statusMsg= "Toast.fire({
+        icon: 'error',
+        padding: '3em',
+        background: '#EBECEC',
+        title: ' Unable to delete Sample.'
+      });";          
+      } 
+    
+    }
 
 ?>
 <!DOCTYPE html>
@@ -848,9 +929,9 @@ while($row1 = mysqli_fetch_array($result1))
     $dateofrec=$row1['date_of_receiving'];
     $age=$row1['age'];
     $gender=$row1['sex'];
-    $contactnumber=$row1['contact_number'];
+    $contactnumber=htmlspecialchars_decode($row1['contact_number']);
     $temp=$row1['temperature'];
-
+    $cnic1=$row1['cnic'];
 }
 
 
@@ -900,7 +981,7 @@ while($row1 = mysqli_fetch_array($result1))
                     </div>
                     <div class="form-group col-md-6">
                       <label >Contact</label>
-                      <input type="number" class="form-control"   name="contact" required value="<?php echo   $contactnumber ?>">
+                      <input type="name" class="form-control"   name="contact" required value="<?php echo   $contactnumber ?>">
                     </div>
   
                     <div class="form-group col-md-6">
@@ -910,7 +991,7 @@ while($row1 = mysqli_fetch_array($result1))
                     
                     <div class="form-group col-md-6">
                       <label >CNIC</label>
-                      <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="cnic" >
+                      <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="cnic"  value="<?php echo $cnic1 ?>">
                     </div>
                        
 
@@ -974,8 +1055,7 @@ while($row1 = mysqli_fetch_array($result1))
         <th>NAME</th>
         <th>DATE OF EXTRACTION</th>
         <th>STATUS</th>
-        <th>STORAGE LOCATION</th>        
-        <th>SETTINGS</th>
+        <th>OPTIONS</th>
       </tr>
       </thead>
       <tbody >    
@@ -1003,7 +1083,7 @@ echo
 <td>'.$sampleresultrow["date_of_extraction"].'</td>
 <td>
 <div class="form-group">
-<select class="form-control " name="status" id='.$sampleresultrow["sdid"].'>';
+<select class="form-control firstselect" name="status" id='.$sampleresultrow["sdid"].'>';
 
 
 $query = "SELECT *  FROM `status`";
@@ -1052,38 +1132,86 @@ echo' </select>
                       </div>
 </td>
 
-<td></td>
 
-<td>   
+<td>  
+<a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#RT'.$sampleresultrow["sdid"].'">
+<i class="nav-icon fas fa-arrow-circle-right"></i>
+    </i>
+    Run Tests
+</a>
+
+
 
 <a class="btn btn-warning btn-sm" href="#" data-toggle="modal" data-target="#M'.$sampleresultrow["sdid"].'">
 <i class="nav-icon far fa-snowflake"></i>
     </i>
     Store
 </a>
-<a class="btn btn-info btn-sm" href="sampledetail.php?sampleid=1">
-    <i class="fas fa-pencil-alt">
-    </i>
-    View
+<div class="modal fade" id="RT'.$sampleresultrow["sdid"].'">
+    <div class="modal-dialog">
+      <div class="modal-content ">
+   
+        <div class="modal-body">
+        <form method="post">
+
+        <input type="name" value="'.$sampleresultrow["sdid"].'" name="dsid">
+        
+        <button type="submit" class="btn btn-outline-light" name="deletesample">Yes</button>
+        
+              </form>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-light" data-dismiss="modal">No</button>
+        
+
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#D'.$sampleresultrow["sdid"].'">
+<i class="fas fa-trash">
+</i>
+Delete
 </a>
 
+<div class="modal fade" id="D'.$sampleresultrow["sdid"].'">
+    <div class="modal-dialog">
+      <div class="modal-content bg-danger">
+   
+        <div class="modal-body">
+          <p class="text-center">Are you sure you want to remove this Participant?</p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-light" data-dismiss="modal">No</button>
+        
+        <form method="post">
 
-<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger1">
-    <i class="fas fa-trash">
-    </i>
-    Delete
-</a></td>
+<input type="hidden" value="'.$sampleresultrow["sdid"].'" name="dsid">
+
+<button type="submit" class="btn btn-outline-light" name="deletesample">Yes</button>
+
+      </form>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</td>
 </tr>
 
 <div class="modal fade" id="M'.$sampleresultrow["sdid"].'" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+        <h5 class="modal-title" id="exampleModalLabel">STORING '.$sampleresultrow["sample_id"].'</h5>
+            </div>
       <div class="modal-body">
-      <form method="POST" action="" enctype="multipart/form-data">
+      <form method="POST" enctype="multipart/form-data">
                   <div class="card-body">
                     <div class="row">
                   <div class="form-group col-md-6">
@@ -1092,12 +1220,12 @@ echo' </select>
                     </div>
                     <div class="form-group col-md-6">
                       <label for="exampleInputEmail1">Sample ID</label>
-                      <input type="name" class="form-control bg-secondary text-white" id="exampleInputEmail1"  name="name" value="'.$sampleresultrow["sample_id"].'" readonly required >
+                      <input type="name" class="form-control bg-secondary text-white" id="exampleInputEmail1"  name="sampleid" value="'.$sampleresultrow["sample_id"].'" readonly required >
                     </div>
                     <div class="form-group col-md-6">
                     <label for="exampleInputEmail1">Select Room</label>
 
-                     <select class="form-control " name="roomselect" id="roomselect">';
+                     <select class="form-control roomselect" name="roomselect" id="roomselect">';
 
 
 
@@ -1117,21 +1245,30 @@ echo' </select>
                     </div>
                     <div class="form-group col-md-6" id="freezerdiv">
                       <label for="exampleInputEmail1">Select Freezer</label>
-                      <select class="form-control " name="status" id="freezers">
+                      <select class="form-control freezers" name="freezer" id="freezers">
                       <option value="0">Select Freezer</option>
                     </select>
-                    </div>
-               
+                    </div> 
                     
-  
-                 
-                       
+                    <div class="form-group col-md-6">
+                           <label for="exampleInputEmail1">Select Row Number</label>
+                           <select class="form-control rowselect" name="frow" id="rowselect">
+                           </select>
 
+                           </div>
+
+                           <div class="form-group col-md-6">
+                           <label for="exampleInputEmail1">Select Column Number</label>
+                           <select class="form-control columnselect" name="fcolumn" id="columnselect">
+                           
+                           </select>
+
+                           </div>
+
+                    </div>  
                     </div>
-  
-  </div>
-  <div class="col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg" name="update">Update</button>
+                  <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" name="storesample">Store</button>
                   </div>
                   </div>
   
@@ -1323,57 +1460,35 @@ while($row1 = mysqli_fetch_array($result1))
         <th>STORAGE LOCATION</th>        
       </tr>
       </thead>
-      <tbody >    
+      <tbody >  
+        
+ <?php
+ $sql1 = "SELECT * FROM `samples_storage_location` as `ssl` INNER JOIN `samplesdata` as `sd` ON `ssl`.sample_id=`sd`.sample_id INNER JOIN `freezerroom` as fr ON `ssl`.freezer_room=`fr`.frid INNER JOIN `freezer` ON freezer.freid=`ssl`.freezer WHERE `ssl`.study_id='$patientid'";
+ 
+ 
+ $result1 = mysqli_query($conn, $sql1);
+ 
+ 
+ while($row1 = mysqli_fetch_array($result1))  
+ { 
+
+echo 
+      '<tr>
+      <td>'.$row1["sample_id"].' </td>
+      <td><img alt="barcode" src="barcode/barcode.php?size=40&text='.$row1["sample_id"].'&print=true"/></td>
+      <td>'.$row1["sample_name"].'</td>
+      <td>'.$row1["date_of_storage"].'</td>
+      <td>'.$row1["roomname"].'->'.$row1["freezername"].'->R'.$row1["freezerrows"].'->C'.$row1["freezercolumns"].'</td>
+      </tr>';
+
+
+ }
+ ?>
 
 <tr>
 
 
-<td>FY-5025-bb4c61d7664de191 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>EDTA</td>
-<td>27/12/2021</td>
 
-<td>F1->R2->C5</td>
-
-
-</tr>
-<tr>
-
-
-<td>FY-5025-5a0574530619ccc9 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>Serum</td>
-<td>27/12/2021</td>
-
-
-                      <td>F1->R2->C4</td>
-
-</tr>
-<tr>
-
-
-<td>FY-5025-0c14b283f1817f24 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>Plasma</td>
-<td>27/12/2021</td>
-
-
-                      <td>F1->R2->C3</td>
-                     
-</tr>
-<tr>
-
-
-<td>FY-5025-0c14b283f1817f24 </td>
-<td> <img src="images/barcode.gif" style="width:200px"> </td>
-<td>HBA1C</td>
-<td>27/12/2021</td>
-
-
-                      <td>F1->R2->C3</td>
-                     
-</tr>
-<tr>
 
 
 
@@ -1471,19 +1586,14 @@ while($row1 = mysqli_fetch_array($result1))
 });
 
 
-$('select').on('change', function (e) {
+$('.firstselect').on('change', function (e) {
     var optionSelected = $("option:selected", this);
     var valueSelected = this.value;
-
-
-
     var invoiceId=this.id;
     var dataString = 'value='+ valueSelected + '&invoiceid=' + invoiceId;
+    event.preventDefault();
 
-
-
-   event.preventDefault();
-  $.ajax({
+    $.ajax({
     method: "GET",
     url: "statusupdate.php",
     data: dataString,
@@ -1507,7 +1617,7 @@ $('select').on('change', function (e) {
     
     });
 
-    $('#roomselect').on('change', function (e) {
+    $('.roomselect').on('change', function (e) {
     var optionSelected = $("option:selected", this);
     var valueSelected = this.value;
     var dataString = 'roomvalue='+ valueSelected ;
@@ -1522,7 +1632,7 @@ $('select').on('change', function (e) {
     success: function(textStatus, status){
       console.log(textStatus);
         console.log(status);
-        $('#freezers').append(textStatus);
+        $('.freezers').append(textStatus);
         
         
     },
@@ -1536,38 +1646,58 @@ $('select').on('change', function (e) {
     
     });
 
-    $('#freezers').on('change', function (e) {
+    $('.freezers').on('change', function (e) {
     var optionSelected = $("option:selected", this);
     var valueSelected = this.value;
-    var dataString = 'freezervalue='+ valueSelected ;
-  
-
-
+    var dataString = 'freezervalue1='+ valueSelected ;
     event.preventDefault();
-
     $.ajax({
     method: "GET",
     url: "statusupdate.php",
     data: dataString,
-      
       success: function(textStatus, status){
       console.log(textStatus);
       console.log(status);
-      $( "#freezerdiv" ).after(textStatus);
+      $( ".rowselect" ).append(textStatus);
         
+      var dataString = 'freezervalue2='+ valueSelected ;
+
+    $.ajax({
+      
+    method: "GET",
+    url: "statusupdate.php",
+    data: dataString,
+      success: function(textStatus, status){
+      console.log(textStatus);
+      console.log(status);
+      $( ".columnselect" ).append(textStatus);
         
-    },
+        },
     error: function(xhr, textStatus, error) {
         console.log(xhr.responseText);
         console.log(xhr.statusText);
         console.log(textStatus);
         console.log(error);
     }
-  });
-    
+  });    
+   
+
+
+        },
+    error: function(xhr, textStatus, error) {
+        console.log(xhr.responseText);
+        console.log(xhr.statusText);
+        console.log(textStatus);
+        console.log(error);
+    }
+  });    
     });
  
+$('.firstselect option[value="4"]').attr('disabled','disabled');
 
+$('.modal').on('hidden.bs.modal', function () {
+  location.reload();
+})
 
 </script>
 </body>
