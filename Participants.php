@@ -164,8 +164,6 @@ if($geltubev>0){
 
 
 
-  $insertsamples=$conn->query("INSERT INTO `samples`(`study_id`, `edta`, `geltube`, `urine`, `serum`, `plasma`, `urinep`, `stype`) 
-  VALUES ('$studyid','$edtav','$geltubev','$urinev','$serumv','$plasmav','$urinepv','$sampletype')");
 
 
       $statusMsg= "Toast.fire({
@@ -411,10 +409,10 @@ echo mysqli_error($conn);
 
     <h3 class="text-center mt-5">PROCESSED SAMPLES</h3>
     <hr />  
+
 <div class="row text-center">
 
 <div class="col-md-4">
-
     <label for="serum">
         <input type="checkbox" id="serum" name="serum" />
       SERUM
@@ -422,10 +420,9 @@ echo mysqli_error($conn);
     <div id="dvserum" style="display: none">
         <input type="number"    name="serumv" id="serumv"/>
     </div>
-
 </div>
-<div class="col-md-4">
 
+<div class="col-md-4">
     <label for="plasma">
         <input type="checkbox" id="plasma" name="plasma"/>
         PLASMA
@@ -433,22 +430,21 @@ echo mysqli_error($conn);
     <div id="dvplasma" style="display: none">
         <input type="number"    name="plasmav" id="plasmav"/>
     </div>
-
 </div>
-<div class="col-md-4">
 
+
+    <div class="col-md-4">
     <label for="urines">
         <input type="checkbox" id="urines" name="urinep"/>
         URINE (Small Tubes)
-    </label>
+    </label>    
     <div id="dvurines" style="display: none">
         <input type="number"   name="urinepv" id="urinepv"/>
     </div>
-
+    </div>
+    </div>
 </div>
 
-    </div>
-    </div>
    
 <div class="form-group col-md-12 text-center mt-5">
                       <input type="submit" class="btn btn-lg btn-primary" value="submit" name="submit" id="submitbtn">

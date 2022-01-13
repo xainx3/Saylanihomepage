@@ -53,7 +53,7 @@ if(!isset($_SESSION["id"])){
     $totalreports=(int)mysqli_num_rows ($totallipidnum) + (int)mysqli_num_rows ($totalcbcnum);
 
 
-    $todayregis="SELECT * FROM `participantsinfocenter` WHERE (`timestamp` > DATE_SUB(now(), INTERVAL 1 DAY))";
+    $todayregis="SELECT * FROM `participantsinfocenter` WHERE DATE(`timestamp`) = CURDATE()";
     $todayregisnum = mysqli_query($conn, $todayregis);
     $todayregisnum=(int)mysqli_num_rows ($todayregisnum);
 

@@ -710,7 +710,7 @@ if(isset($_GET['patientid'])){
 
     $patientid=$_GET['patientid'];
 
-    
+    $studyid=$_GET['patientid'];
     
 }
 
@@ -730,6 +730,46 @@ $rdate=$_POST['rdate'];
 $age=$_POST['age'];
 $gender=$_POST['gender'];
 $contact=$_POST['contact'];
+
+if(isset($_POST['edtav'])){
+  $edtav=(int)$_POST['edtav'];
+  $geltubev=(int)$_POST['geltubev'];
+  $urinev=(int)$_POST['urinev'];
+  }
+  
+  else{
+    $edtav=0;
+  $geltubev=0;
+  $urinev=0;
+  }
+  if(isset($_POST['serumv'])){
+  
+  $serumv=(int)$_POST['serumv'];
+  $plasmav=(int)$_POST['plasmav'];
+  $urinepv=(int)$_POST['urinepv'];
+  
+  }
+  
+  else{
+    $serumv=0;
+  $plasmav=0;
+  $urinep=0;
+  }
+  
+  
+  
+  
+  if($edtav>0){
+    $sampletype="RAW";
+  
+  
+  }
+  
+  if($serumv>0){
+    $sampletype="PROCESSED";
+  
+  
+  }
 
 if(!isset($_POST['temp'])){
 
@@ -754,6 +794,78 @@ $insert = $conn->query("UPDATE `participantsinfocenter` SET `date_of_enrollment`
 `temperature`='$temp' WHERE `study_id`='$patientid'");
     
 if($insert){
+
+  if($edtav>0 || $geltubev>0 || $urinev>0 || $serumv>0 || $plasmav>0 || $urinepv>0){
+
+    $delete= $conn->query("Delete from `samplesdata` WHERE `study_id`='$studyid'");
+  }
+
+
+  if($edtav>0){
+
+
+    for($i=1;$i<=$edtav;$i++){
+    
+      $sampleid=$studyid.'-ED-'.$i;
+      $samplename='EDTA-'.$i;
+      $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+    }
+    }
+    
+    
+    if($geltubev>0){
+      for($i=1;$i<=$geltubev;$i++){
+      
+        $sampleid=$studyid.'-GT-'.$i;
+        $samplename='GELTUBE-'.$i;
+        $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+      }
+      }
+    
+      if($urinev>0){
+     
+        for($i=1;$i<=$urinev;$i++){
+        
+          $sampleid=$studyid.'-UR-'.$i;
+          $samplename='URINE-'.$i;
+          $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+        }
+        }
+    
+        if($serumv>0){
+          for($i=1;$i<=$serumv;$i++){
+          
+            $sampleid=$studyid.'-S-'.$i;
+            $samplename='SERUM-'.$i;
+            $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+          }
+          }
+    
+          if($plasmav>0){
+            for($i=1;$i<=$plasmav;$i++){
+            
+              $sampleid=$studyid.'-P-'.$i;
+              $samplename='PLASMA-'.$i;
+              $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+            }
+            }
+    
+            if($urinepv>0){
+              for($i=1;$i<=$urinepv;$i++){
+              
+                $sampleid=$studyid.'-UP-'.$i;
+                $samplename='URINE-'.$i;
+                $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+              }
+              }
+    
+    
+              
+    
+      // $insertsamples=$conn->query("INSERT INTO `samples`(`study_id`, `edta`, `geltube`, `urine`, `serum`, `plasma`, `urinep`, `stype`) 
+      // VALUES ('$studyid','$edtav','$geltubev','$urinev','$serumv','$plasmav','$urinepv','$sampletype')");
+    
+
       $statusMsg= "Toast.fire({
   icon: 'success',
   padding: '3em',  
@@ -953,8 +1065,11 @@ while($row1 = mysqli_fetch_array($result1))
 
 
 <form method="POST" action="" enctype="multipart/form-data">
-                  <div class="card-body">
+                  
+
+                    <div class="card-body">
                     <div class="row">
+
                   <div class="form-group col-md-6">
                       <label >MR. No</label>
                       <input type="name" class="form-control bg-secondary"   name="mrno" required value="<?php echo $studyid ?>" readonly>
@@ -993,14 +1108,121 @@ while($row1 = mysqli_fetch_array($result1))
                       <label >CNIC</label>
                       <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="cnic"  value="<?php echo $cnic1 ?>">
                     </div>
-                       
+                    
+                    
+
 
                     </div>
+                    </div>
+
+                    <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Want to Update Sample too?</i></b></h3>
+              </div>
+              </div>
+
+<div class="row text-center mb-5">
+
+<div class="col-md-6">
+        <input class="btn btn-primary  w-100" type="button" id="raw" value=" RAW"/>
+      
+        </div>
+        <div class="col-md-6">
+        <input type="button" class="btn btn-primary w-100" id="processed" value="PROCESSED"/>
+       
+        </div>
+
+        </div>
+
+
+                    <div id="rawsamples">
+<h3 class="text-center">RAW SAMPLES</h3>
+<hr>
+<div class="row text-center">
+
+<div class="col-md-4 ">
+<label for="edta">
+        <input type="checkbox" id="edta"  name="edta"/>
+        ETDA
+    </label>
+    <div id="dvedta" style="display: none">
+        <input type="number"   name="edtav" id="edtav"/>
+    </div>
+
+</div>
+
+<div class="col-md-4">
+    <label for="geltube">
+        <input type="checkbox" id="geltube" name="geltube"/>
+        GEL TUBE
+    </label>
+    <div id="dvgeltube" style="display: none">
+        <input type="number"    name="geltubev" id="geltubev"/>
+    </div>
+    </div>
+
+    <div class="col-md-4">
+    <label for="urine">
+        <input type="checkbox" id="urine" name="urine" />
+        URINE
+    </label>
+    <div id="dvurine" style="display: none">
+        <input type="number"    name="urinev" id="urinev"/>
+    </div>
+    </div>
+
+    </div>
+    </div>
+
+                    <div id="processedsamples">
+
+    <h3 class="text-center mt-5">PROCESSED SAMPLES</h3>
+    <hr />  
+
+<div class="row text-center">
+
+<div class="col-md-4">
+    <label for="serum">
+        <input type="checkbox" id="serum" name="serum" />
+      SERUM
+    </label>
+    <div id="dvserum" style="display: none">
+        <input type="number"    name="serumv" id="serumv"/>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <label for="plasma">
+        <input type="checkbox" id="plasma" name="plasma"/>
+        PLASMA
+    </label>
+    <div id="dvplasma" style="display: none">
+        <input type="number"    name="plasmav" id="plasmav"/>
+    </div>
+</div>
+
+
+    <div class="col-md-4">
+    <label for="urines">
+        <input type="checkbox" id="urines" name="urinep"/>
+        URINE (Small Tubes)
+    </label>    
+    <div id="dvurines" style="display: none">
+        <input type="number"   name="urinepv" id="urinepv"/>
+    </div>
+    </div>
+    </div>
+</div>
+
   
-  </div>
-  <div class="col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg" name="update">Update</button>
-                  </div>
+
+
+
+                  <div class="form-group col-md-12 text-center mt-5">
+                      <input type="submit" class="btn btn-lg btn-primary" value="Update" name="update" >
+                    </div>
+
+
                   </div>
   
                 
@@ -1009,13 +1231,7 @@ while($row1 = mysqli_fetch_array($result1))
   
 
             </div>
-          
-
-         
- 
-          
-      </div>
-      <!-- /.card -->
+       </div>
 
     </section>
 
@@ -1154,7 +1370,7 @@ echo' </select>
         <div class="modal-body">
         <form method="post">
 
-        <input type="name" value="'.$sampleresultrow["sdid"].'" name="dsid">
+        <input type="hidden" value="'.$sampleresultrow["sdid"].'" name="dsid">
         
         <button type="submit" class="btn btn-outline-light" name="deletesample">Yes</button>
         
@@ -1448,6 +1664,194 @@ while($row1 = mysqli_fetch_array($result1))
                 </div>
                   <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
 <p class="text-center">No Record Found!</p>
+
+<div class="text-center">
+<a class="btn btn-primary btn-lg" href="#" data-toggle="modal" data-target="#familyadd">
+
+    ADD MEMBER
+</a>
+</div>
+<div class="modal fade" id="familyadd">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content ">
+   
+        <div class="modal-body">
+        <form method="POST" action="" enctype="multipart/form-data" id="childregistrationform" class=" rounded" onsubmit="return validateForm()">
+      <h1 class="text-center" style="margin: 0 0;">Enter Participant's Details</h1>
+
+      <div class="card-body">
+        <div class="row">
+
+      <div class="form-group col-md-6">
+          <label >Study Id</label>
+          <input type="name" class="form-control"  placeholder="Enter Study Id" name="childmrno" required>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="exampleInputEmail1">Name</label>
+          <input type="name" class="form-control"  placeholder="Enter Full Name" name="childname" required>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="exampleInputPassword1">Date of Enrollment</label>
+          <input type="date" class="form-control"   name="childedate" required max="<?php echo date("Y-m-d"); ?>">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="exampleInputPassword1">Date of Receiving</label>
+          <input type="date" class="form-control"  placeholder="Enter age" name="childrdate" required max="<?php echo date("Y-m-d"); ?>">
+        </div>
+        
+
+        <div class="form-group col-md-6">
+                      <label for="exampleInputPassword1">Age</label>
+                      <input type="number" class="form-control" placeholder="Enter age of Participant"  name="childage" required >
+                    </div>
+
+        <div class="form-group">
+          <label for="exampleInputPassword1">Gender</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="childgender" checked value="MALE">
+            <label class="form-check-label">Male</label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="childgender" value="FEMALE">
+            <label class="form-check-label">Female</label>
+          </div>
+       
+        </div>
+        <div class="form-group col-md-6">
+          <label >Contact</label>
+          <input type="number" class="form-control"  placeholder="Enter Contact Number" name="childcontactno" required>
+        </div>
+        
+          <div class="form-group col-md-6">
+                      <label >Temprature &#8451;</label>
+                      <input type="number" class="form-control"  placeholder="Enter Temprature of Sample" name="childtemp"  >
+                    </div>
+                    <div class="form-group col-md-12 mb-5">
+                      <label >CNIC</label>
+                      <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="childcnic" >
+                    </div>
+
+</div>
+
+
+<h4>Do you have raw samples or processed samples?</h4>
+
+<div class="row text-center mb-5">
+
+<div class="col-md-6">
+        <input class="btn btn-primary  w-100" type="button" id="childraw" value=" RAW"/>
+      
+        </div>
+        <div class="col-md-6">
+        <input type="button" class="btn btn-primary w-100" id="childprocessed" value="PROCESSED"/>
+       
+        </div>
+
+        </div>
+
+<div id="childrawsamples">
+<h3 class="text-center">RAW SAMPLES</h3>
+<hr>
+<div class="row text-center">
+
+<div class="col-md-4 ">
+<label for="childedta">
+        <input type="checkbox" id="childedta"  name="childedta"/>
+        ETDA
+    </label>
+    <div id="childdvedta" style="display: none">
+        <input type="number"   name="childedtav" id="childedtav"/>
+    </div>
+
+</div>
+
+<div class="col-md-4">
+    <label for="childgeltube">
+        <input type="checkbox" id="childgeltube" name="childgeltube"/>
+        GEL TUBE
+    </label>
+    <div id="childdvgeltube" style="display: none">
+        <input type="number"    name="childgeltubev" id="childgeltubev"/>
+    </div>
+    </div>
+
+    <div class="col-md-4">
+    <label for="childurine">
+        <input type="checkbox" id="childurine" name="childurine" />
+        URINE
+    </label>
+    <div id="dvurine" style="display: none">
+        <input type="number"    name="childurinev" id="childurinev"/>
+    </div>
+    </div>
+
+    </div>
+    </div>
+
+<div id="childprocessedsamples">
+
+    <h3 class="text-center mt-5">PROCESSED SAMPLES</h3>
+    <hr />  
+
+<div class="row text-center">
+
+<div class="col-md-4">
+    <label for="childserum">
+        <input type="checkbox" id="childserum" name="childserum" />
+      SERUM
+    </label>
+    <div id="dvserum" style="display: none">
+        <input type="number"    name="childserumv" id="childserumv"/>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <label for="childplasma">
+        <input type="checkbox" id="plasma" name="childplasma"/>
+        PLASMA
+    </label>
+    <div id="childdvplasma" style="display: none">
+        <input type="number"    name="childplasmav" id="childplasmav"/>
+    </div>
+</div>
+
+
+    <div class="col-md-4">
+    <label for="urines">
+        <input type="checkbox" id="childurines" name="childurinep"/>
+        URINE (Small Tubes)
+    </label>    
+    <div id="childdvurines" style="display: none">
+        <input type="number"   name="childurinepv" id="childurinepv"/>
+    </div>
+    </div>
+    </div>
+</div>
+
+   
+<div class="form-group col-md-12 text-center mt-5">
+                      <input type="submit" class="btn btn-lg btn-primary" value="submit" name="childsubmit" id="childsubmitbtn">
+                    </div>
+     
+     
+    </form>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-light" data-dismiss="modal">No</button>
+        
+
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
                 </div>
                   <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
                   <table id="example1" class="table table-bordered table-striped text-center">
@@ -1697,7 +2101,206 @@ $('.firstselect option[value="4"]').attr('disabled','disabled');
 
 $('.modal').on('hidden.bs.modal', function () {
   location.reload();
-})
+});
+
+
+$(function () {
+
+$("#rawsamples").hide();
+$("#processedsamples").hide();
+$("#submitbtn").hide();
+
+$("#raw").click(function () {
+    
+  $("#rawsamples").show();
+  $("#submitbtn").show();
+  $("#processedsamples").hide();
+
+      });
+
+      $("#processed").click(function () {
+
+        $("#rawsamples").hide();
+$("#processedsamples").show();
+$("#submitbtn").show();
+        });
+});
+
+$(function () {
+      $("#edta").click(function () {
+          if ($(this).is(":checked")) {
+              $("#dvedta").show();
+              $("#edtav").val('3');
+          } else {
+              $("#dvedta").hide();
+              $("#edtav").val('0');
+          }
+      });
+      $("#geltube").click(function () {
+          if ($(this).is(":checked")) {
+              $("#dvgeltube").show();
+              $("#geltubev").val('3');
+          } else {
+              $("#dvgeltube").hide();
+              $("#geltubev").val('0');
+          }
+      });
+      $("#urine").click(function () {
+          if ($(this).is(":checked")) {
+              $("#dvurine").show();
+              $("#urinev").val('1');
+          } else {
+              $("#dvurine").hide();
+              $("#urinev").val('0');
+          }
+      });
+      $("#serum").click(function () {
+          if ($(this).is(":checked")) {
+            
+              $("#dvserum").show();
+              $("#serumv").val('3');
+          } else {
+              $("#dvserum").hide();
+              $("#serumv").val('0');
+          }
+      });
+      $("#plasma").click(function () {
+          if ($(this).is(":checked")) {
+              $("#dvplasma").show();
+              $("#plasmav").val('3');
+          } else {
+              $("#dvplasma").hide();
+              $("#plasmav").val('0');
+          }
+      });
+      $("#urines").click(function () {
+          if ($(this).is(":checked")) {
+              $("#dvurines").show();
+              $("#urinepv").val('1');
+          } else {
+              $("#dvurines").hide();
+              $("#urinepv").val('0');
+          }
+      });
+  });
+
+  function validateForm() {
+
+if ($('#serum').is(":checked") || $('#edta').is(":checked") ) {
+return true;
+}
+
+else{
+Toast.fire({
+icon: 'error',
+padding: '3em',  
+background: '#EBECEC',
+title: 'Samples Not Selected!'
+});
+      return false;
+  }
+
+}
+
+
+
+$(function () {
+
+$("#childrawsamples").hide();
+$("#childprocessedsamples").hide();
+$("#childsubmitbtn").hide();
+
+$("#childraw").click(function () {
+    
+  $("#childrawsamples").show();
+  $("#childsubmitbtn").show();
+  $("#childprocessedsamples").hide();
+
+      });
+
+      $("#childprocessed").click(function () {
+
+        $("#childrawsamples").hide();
+$("#childprocessedsamples").show();
+$("#childsubmitbtn").show();
+        });
+});
+
+$(function () {
+      $("#childedta").click(function () {
+          if ($(this).is(":checked")) {
+              $("#childdvedta").show();
+              $("#childedtav").val('3');
+          } else {
+              $("#childdvedta").hide();
+              $("#childedtav").val('0');
+          }
+      });
+      $("#childgeltube").click(function () {
+          if ($(this).is(":checked")) {
+              $("#childdvgeltube").show();
+              $("#childgeltubev").val('3');
+          } else {
+              $("#childdvgeltube").hide();
+              $("#childgeltubev").val('0');
+          }
+      });
+      $("#childurine").click(function () {
+          if ($(this).is(":checked")) {
+              $("#childdvurine").show();
+              $("#childurinev").val('1');
+          } else {
+              $("#childdvurine").hide();
+              $("#childurinev").val('0');
+          }
+      });
+      $("#childserum").click(function () {
+          if ($(this).is(":checked")) {
+            
+              $("#childdvserum").show();
+              $("#childserumv").val('3');
+          } else {
+              $("#childdvserum").hide();
+              $("#childserumv").val('0');
+          }
+      });
+      $("#childplasma").click(function () {
+          if ($(this).is(":checked")) {
+              $("#childdvplasma").show();
+              $("#childplasmav").val('3');
+          } else {
+              $("#childdvplasma").hide();
+              $("#childplasmav").val('0');
+          }
+      });
+      $("#childurines").click(function () {
+          if ($(this).is(":checked")) {
+              $("#childdvurines").show();
+              $("#childurinepv").val('1');
+          } else {
+              $("#childdvurines").hide();
+              $("#childurinepv").val('0');
+          }
+      });
+  });
+
+  function validateForm() {
+
+if ($('#childserum').is(":checked") || $('#childedta').is(":checked") ) {
+return true;
+}
+
+else{
+Toast.fire({
+icon: 'error',
+padding: '3em',  
+background: '#EBECEC',
+title: 'Samples Not Selected!'
+});
+      return false;
+  }
+
+}
 
 </script>
 </body>
