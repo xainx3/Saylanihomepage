@@ -1047,6 +1047,173 @@ while($row1 = mysqli_fetch_array($result1))
 }
 
 
+
+// CALLBACK
+
+if(isset($_POST['childsubmit'])){
+
+  echo '<script>alert("Member Added Successfully!")</script>';
+
+
+  // $childname=$_POST['childname'];
+  // $childedate=$_POST['childedate'];
+  // $childrdate=$_POST['childrdate'];
+  // $childage=$_POST['childage'];
+  // $childgender=$_POST['childgender'];
+  // $childcontact=$_POST['childcontact'];
+  
+  // if(isset($_POST['childedtav'])){
+  //   $childedtav=(int)$_POST['childedtav'];
+  //   $childgeltubev=(int)$_POST['childgeltubev'];
+  //   $childurinev=(int)$_POST['childurinev'];
+  //   }
+    
+  //   else{
+  //     $childedtav=0;
+  //   $childgeltubev=0;
+  //   $childurinev=0;
+  //   }
+  //   if(isset($_POST['childserumv'])){
+    
+  //   $childserumv=(int)$_POST['childserumv'];
+  //   $childplasmav=(int)$_POST['childplasmav'];
+  //   $childurinepv=(int)$_POST['childurinepv'];
+    
+  //   }
+    
+  //   else{
+  //     $childserumv=0;
+  //   $childplasmav=0;
+  //   $childurinep=0;
+  //   }
+    
+    
+    
+    
+  //   if($childedtav>0){
+  //     $childsampletype="RAW";
+    
+    
+  //   }
+    
+  //   if($schilderumv>0){
+  //     $childsampletype="PROCESSED";
+    
+    
+  //   }
+  
+  // if(!isset($_POST['childtemp'])){
+  
+  //   $childtemp='N/A';
+  // }
+  // else{
+  //   $childtemp=$_POST['childtemp'].'C';
+  // }
+  
+  // if(!isset($_POST['childcnic'])){
+  
+  //   $childcnic='N/A';
+  // }
+  // else{
+  //   $childcnic=$_POST['childcnic'];
+  // }
+  
+  
+  
+  // $childinsert = $conn->query("UPDATE `participantsinfocenter` SET `date_of_enrollment`='$childedate',
+  // `date_of_receiving`='$childrdate',`name`='$childname',`age`='$childage',`sex`='$childgender',`contact_number`='$childcontact',
+  // `temperature`='$childtemp' WHERE `study_id`='$childpatientid'");
+      
+  // if($childinsert){
+  
+  //   if($childedtav>0 || $childgeltubev>0 || $childurinev>0 || $childserumv>0 || $childplasmav>0 || $childurinepv>0){
+  
+  //     $delete= $conn->query("Delete from `samplesdata` WHERE `study_id`='$studyid'");
+  //   }
+  
+  
+  //   if($childedtav>0){
+  
+  
+  //     for($i=1;$i<=$edtav;$i++){
+      
+  //       $sampleid=$studyid.'-ED-'.$i;
+  //       $samplename='EDTA-'.$i;
+  //       $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+  //     }
+  //     }
+      
+      
+  //     if($geltubev>0){
+  //       for($i=1;$i<=$geltubev;$i++){
+        
+  //         $sampleid=$studyid.'-GT-'.$i;
+  //         $samplename='GELTUBE-'.$i;
+  //         $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+  //       }
+  //       }
+      
+  //       if($urinev>0){
+       
+  //         for($i=1;$i<=$urinev;$i++){
+          
+  //           $sampleid=$studyid.'-UR-'.$i;
+  //           $samplename='URINE-'.$i;
+  //           $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+  //         }
+  //         }
+      
+  //         if($serumv>0){
+  //           for($i=1;$i<=$serumv;$i++){
+            
+  //             $sampleid=$studyid.'-S-'.$i;
+  //             $samplename='SERUM-'.$i;
+  //             $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+  //           }
+  //           }
+      
+  //           if($plasmav>0){
+  //             for($i=1;$i<=$plasmav;$i++){
+              
+  //               $sampleid=$studyid.'-P-'.$i;
+  //               $samplename='PLASMA-'.$i;
+  //               $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+  //             }
+  //             }
+      
+  //             if($urinepv>0){
+  //               for($i=1;$i<=$urinepv;$i++){
+                
+  //                 $sampleid=$studyid.'-UP-'.$i;
+  //                 $samplename='URINE-'.$i;
+  //                 $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+  //               }
+  //               }
+      
+      
+                
+      
+   
+  //       $statusMsg= "Toast.fire({
+  //   icon: 'success',
+  //   padding: '3em',  
+  //   background: '#EBECEC',
+  //   title: ' Participant Updated Successfully.'
+  //   });";               
+      
+  // }
+  
+  
+  
+  
+  
+  }
+
+
+
+
+
+
 ?> 
     <!-- Main content -->
     <section class="content">
@@ -1271,6 +1438,7 @@ while($row1 = mysqli_fetch_array($result1))
         <th>NAME</th>
         <th>DATE OF EXTRACTION</th>
         <th>STATUS</th>
+        <th>RUN TESTS</th>
         <th>OPTIONS</th>
       </tr>
       </thead>
@@ -1348,13 +1516,22 @@ echo' </select>
                       </div>
 </td>
 
+<td>
+<div class="form-group ">
 
+ <select class="form-control bg-primary" name="testselect">
+ <option value="0">Select Test to Perform</option>
+<option value="CBC">CBC</option>
+<option value="Lipid Profile">Lipid Profile</option>
+<option value="hba1c">HbA1c</option>
+<option value="uma">UMA</option>
+<option value="dna">DNA Extraction</option>
+ </select>
+ </div>
+
+</td>
 <td>  
-<a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#RT'.$sampleresultrow["sdid"].'">
-<i class="nav-icon fas fa-arrow-circle-right"></i>
-    </i>
-    Run Tests
-</a>
+
 
 
 
@@ -1363,28 +1540,7 @@ echo' </select>
     </i>
     Store
 </a>
-<div class="modal fade" id="RT'.$sampleresultrow["sdid"].'">
-    <div class="modal-dialog">
-      <div class="modal-content ">
-   
-        <div class="modal-body">
-        <form method="post">
 
-        <input type="hidden" value="'.$sampleresultrow["sdid"].'" name="dsid">
-        
-        <button type="submit" class="btn btn-outline-light" name="deletesample">Yes</button>
-        
-              </form>
-        </div>
-        <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-outline-light" data-dismiss="modal">No</button>
-        
-
-        
-        </div>
-      </div>
-    </div>
-  </div>
 
 
 <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#D'.$sampleresultrow["sdid"].'">
@@ -1508,8 +1664,7 @@ echo' </select>
                   <table id="example1" class="table table-bordered table-striped text-center">
       <thead>
       <tr>
-        <th>BARCODE DATA</th>
-        <th>BARCODE IMAGE</th>
+        <th>STUDY ID</th>
         <th>NAME</th>
         <th>DATE OF RESULT</th>
         <th>STATUS</th>
@@ -1534,7 +1689,6 @@ while($row1 = mysqli_fetch_array($result1))
   echo '<tr>
 
 
-    <td>'.$row1["study_id"].'</td>
     <td>'.$row1["study_id"].'</td>
     <td>Lipid Profile</td>
     <td>'.$row1["study_date"].'</td>
@@ -1598,7 +1752,6 @@ while($row1 = mysqli_fetch_array($result1))
 
 
     <td>'.$row1["study_id"].'</td>
-    <td>'.$row1["study_id"].'</td>
     <td>CBC</td>
     <td>'.$row1["study_date"].'</td>
     <td>
@@ -1648,6 +1801,132 @@ while($row1 = mysqli_fetch_array($result1))
 
 }
 
+
+$sql1 = "SELECT * FROM `labvalues_hba1c` WHERE `study_id`='$patientid'";
+ 
+ 
+$result1 = mysqli_query($conn, $sql1);
+
+
+while($row1 = mysqli_fetch_array($result1))  
+{ 
+
+    
+  echo '<tr>
+
+
+    <td>'.$row1["study_id"].'</td>
+    <td>HBA1C</td>
+    <td>'.$row1["study_date"].'</td>
+    <td>
+    <div class="form-group">
+                            <select class="form-control bg-success">
+                              <option>Pending</option>
+                              <option >Processing</option>
+                              <option Selected>Completed</option>
+                             
+                            </select>
+                          </div>
+    </td>
+    <td>
+    
+    <form action="" method="post">
+    
+    <input type="hidden" name="stid" value="'.$row1["study_id"].'">
+    <input type="hidden" name="rdate" value="'.$row1["study_date"].'">
+
+    
+    
+   
+    
+    <button type="submit" class="btn btn-app bg-success" name="pdfcbc">
+    <i class="fas fa-download"></i> Download
+                    </button>
+                    
+                    </form>
+                    </td>
+    
+                          <td>    
+    <a class="btn btn-info btn-sm" href="reporthba1c.php?sampleid='.$row1["study_id"].'&date='.$row1["study_date"].'">
+        <i class="fas fa-pencil-alt">
+        </i>
+        View
+    </a>
+    
+    
+    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger1">
+        <i class="fas fa-trash">
+        </i>
+        Delete
+    </a></td>
+    </tr>';
+
+
+
+}
+$sql1 = "SELECT * FROM `labvalues_uma` WHERE `study_id`='$patientid'";
+ 
+ 
+$result1 = mysqli_query($conn, $sql1);
+
+
+while($row1 = mysqli_fetch_array($result1))  
+{ 
+
+    
+  echo '<tr>
+
+
+    <td>'.$row1["study_id"].'</td>
+    <td>UMA</td>
+    <td>'.$row1["study_date"].'</td>
+    <td>
+    <div class="form-group">
+                            <select class="form-control bg-success">
+                              <option>Pending</option>
+                              <option >Processing</option>
+                              <option Selected>Completed</option>
+                             
+                            </select>
+                          </div>
+    </td>
+    <td>
+    
+    <form action="" method="post">
+    
+    <input type="hidden" name="stid" value="'.$row1["study_id"].'">
+    <input type="hidden" name="rdate" value="'.$row1["study_date"].'">
+
+    
+    
+   
+    
+    <button type="submit" class="btn btn-app bg-success" name="pdfcbc">
+    <i class="fas fa-download"></i> Download
+                    </button>
+                    
+                    </form>
+                    </td>
+    
+                          <td>    
+    <a class="btn btn-info btn-sm" href="reportuma.php?sampleid='.$row1["study_id"].'&date='.$row1["study_date"].'">
+        <i class="fas fa-pencil-alt">
+        </i>
+        View
+    </a>
+    
+    
+    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-danger1">
+        <i class="fas fa-trash">
+        </i>
+        Delete
+    </a></td>
+    </tr>';
+
+
+
+}
+
 ?> 
 
 
@@ -1671,22 +1950,17 @@ while($row1 = mysqli_fetch_array($result1))
     ADD MEMBER
 </a>
 </div>
+
 <div class="modal fade" id="familyadd">
     <div class="modal-dialog modal-lg">
       <div class="modal-content ">
    
         <div class="modal-body">
         <form method="POST" action="" enctype="multipart/form-data" id="childregistrationform" class=" rounded" onsubmit="return validateForm()">
-      <h1 class="text-center" style="margin: 0 0;">Enter Participant's Details</h1>
+      <h1 class="text-center" style="margin: 0 0;">Enter Participant's Family Member Details</h1>
 
       <div class="card-body">
         <div class="row">
-
-      <div class="form-group col-md-6">
-          <label >Study Id</label>
-          <input type="name" class="form-control"  placeholder="Enter Study Id" name="childmrno" required>
-        </div>
-
         <div class="form-group col-md-6">
           <label for="exampleInputEmail1">Name</label>
           <input type="name" class="form-control"  placeholder="Enter Full Name" name="childname" required>
@@ -1708,7 +1982,7 @@ while($row1 = mysqli_fetch_array($result1))
                       <input type="number" class="form-control" placeholder="Enter age of Participant"  name="childage" required >
                     </div>
 
-        <div class="form-group">
+        <div class="form-group col-md-6">
           <label for="exampleInputPassword1">Gender</label>
           <div class="form-check">
             <input class="form-check-input" type="radio" name="childgender" checked value="MALE">
@@ -1730,7 +2004,7 @@ while($row1 = mysqli_fetch_array($result1))
                       <label >Temprature &#8451;</label>
                       <input type="number" class="form-control"  placeholder="Enter Temprature of Sample" name="childtemp"  >
                     </div>
-                    <div class="form-group col-md-12 mb-5">
+                    <div class="form-group col-md-6 ">
                       <label >CNIC</label>
                       <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="childcnic" >
                     </div>
@@ -1784,7 +2058,7 @@ while($row1 = mysqli_fetch_array($result1))
         <input type="checkbox" id="childurine" name="childurine" />
         URINE
     </label>
-    <div id="dvurine" style="display: none">
+    <div id="childdvurine" style="display: none">
         <input type="number"    name="childurinev" id="childurinev"/>
     </div>
     </div>
@@ -1804,14 +2078,14 @@ while($row1 = mysqli_fetch_array($result1))
         <input type="checkbox" id="childserum" name="childserum" />
       SERUM
     </label>
-    <div id="dvserum" style="display: none">
+    <div id="childdvserum" style="display: none">
         <input type="number"    name="childserumv" id="childserumv"/>
     </div>
 </div>
 
 <div class="col-md-4">
     <label for="childplasma">
-        <input type="checkbox" id="plasma" name="childplasma"/>
+        <input type="checkbox" id="childplasma" name="childplasma"/>
         PLASMA
     </label>
     <div id="childdvplasma" style="display: none">
@@ -1821,7 +2095,7 @@ while($row1 = mysqli_fetch_array($result1))
 
 
     <div class="col-md-4">
-    <label for="urines">
+    <label for="childurines">
         <input type="checkbox" id="childurines" name="childurinep"/>
         URINE (Small Tubes)
     </label>    
@@ -1840,14 +2114,10 @@ while($row1 = mysqli_fetch_array($result1))
      
     </form>
         </div>
-        <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-outline-light" data-dismiss="modal">No</button>
-        
-
-        
-        </div>
+      
       </div>
     </div>
+  </div>
   </div>
 
 
@@ -1867,22 +2137,22 @@ while($row1 = mysqli_fetch_array($result1))
       <tbody >  
         
  <?php
- $sql1 = "SELECT * FROM `samples_storage_location` as `ssl` INNER JOIN `samplesdata` as `sd` ON `ssl`.sample_id=`sd`.sample_id INNER JOIN `freezerroom` as fr ON `ssl`.freezer_room=`fr`.frid INNER JOIN `freezer` ON freezer.freid=`ssl`.freezer WHERE `ssl`.study_id='$patientid'";
+ $slocation = "SELECT * FROM `samples_storage_location` as `ssl` INNER JOIN `samplesdata` as `sd` ON `ssl`.sample_id=`sd`.sample_id INNER JOIN `freezerroom` as fr ON `ssl`.freezer_room=`fr`.frid INNER JOIN `freezer` ON freezer.freid=`ssl`.freezer WHERE `ssl`.study_id='$patientid'";
  
  
- $result1 = mysqli_query($conn, $sql1);
+ $slocationresult = mysqli_query($conn, $slocation);
  
  
- while($row1 = mysqli_fetch_array($result1))  
+ while($slocationresultrow = mysqli_fetch_array($slocationresult ))  
  { 
 
 echo 
       '<tr>
-      <td>'.$row1["sample_id"].' </td>
-      <td><img alt="barcode" src="barcode/barcode.php?size=40&text='.$row1["sample_id"].'&print=true"/></td>
-      <td>'.$row1["sample_name"].'</td>
-      <td>'.$row1["date_of_storage"].'</td>
-      <td>'.$row1["roomname"].'->'.$row1["freezername"].'->R'.$row1["freezerrows"].'->C'.$row1["freezercolumns"].'</td>
+      <td>'.$slocationresultrow["sample_id"].' </td>
+      <td><img alt="barcode" src="barcode/barcode.php?size=40&text='.$slocationresultrow["sample_id"].'&print=true"/></td>
+      <td>'.$slocationresultrow["sample_name"].'</td>
+      <td>'.$slocationresultrow["date_of_storage"].'</td>
+      <td>'.$slocationresultrow["roomname"].'->'.$slocationresultrow["freezername"].'->R'.$slocationresultrow["freezer_rows"].'->C'.$slocationresultrow["freezer_columns"].'</td>
       </tr>';
 
 

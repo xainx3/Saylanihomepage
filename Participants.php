@@ -493,7 +493,6 @@ $result1 = mysqli_query($conn, $sql1);
 
 while($row1 = mysqli_fetch_array($result1))  
 { 
-
     $studyid=$row1['study_id'];  
     $name=$row1['name'];
     $dateofen=$row1['date_of_enrollment'];
@@ -502,10 +501,7 @@ while($row1 = mysqli_fetch_array($result1))
     $gender=$row1['sex'];
     $contactnumber=$row1['contact_number'];
     $temp=$row1['temperature'];
-
-
 echo "<tr>
-
 <td>".$row1['study_id']."</td>
 <td>".$row1['name']."</td>
 <td>".$row1['date_of_enrollment']."</td>
@@ -522,44 +518,23 @@ View
 </a></td>
 
 </tr>";
-
-
 }
-
-
 ?> 
-
-
-
-
-
-
-
-
-      </tbody>
-    
-    </table>   
+</tbody>
+</table>   
   </section>
-  
-
-  <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
     <div class="p-3">
       <h5>Title</h5>
       <p>Sidebar content</p>
     </div>
   </aside>
-  <!-- /.control-sidebar -->
-
-  <!-- Main Footer -->
   <footer class="main-footer">
     <strong>Copyright &copy; <?php echo date("Y"); ?> <a href="https://www.cncdpk.com/">CNCD</a>.</strong>
     All rights reserved.
    
   </footer>
 </div>
-<!-- ./wrapper -->
 <div class="modal fade" id="loadMe" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
@@ -572,14 +547,9 @@ View
       </div>
     </div>
   </div>
-<!-- REQUIRED SCRIPTS -->
-
 <script src="plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="plugins/toastr/toastr.min.js"></script>
@@ -589,14 +559,7 @@ View
 <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
 <script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-
-
-
-
-
-    <script>
-
-      
+<script>
 const Toast = Swal.mixin({
   toast: true,
   position: 'center',
@@ -615,33 +578,24 @@ const Toast = Swal.mixin({
       if($('#blood').is(':checked') && $('#urine').is(':checked')){
 
         $("#loadMe").modal({
-                   backdrop: "static", //remove ability to close modal with click
-                    keyboard: false, //remove option to close with keyboard
-                    show: true //Display loader!
+                   backdrop: "static", 
+                    keyboard: false, 
+                    show: true 
                    });
               setTimeout(function() {
                    $("#loadMe").modal("hide");
                    $("#wizard").steps("next");
                   }, 5000);
-
-                  $('#next').click();
-              
+                  $('#next').click();              
             }
-           
-         
-
-          else{
-
+         else{
             alert('Please Collect Blood and Urine Samples first!');
-          }
- 
+          } 
         }
-
-        if ( window.history.replaceState ) {
+if ( window.history.replaceState ) {
   window.history.replaceState( null, null, window.location.href );
 }
-
-         $('#recenttb').DataTable({
+      $('#recenttb').DataTable({
       "paging": false,
       "lengthChange": false,
       "searching": false,
@@ -650,28 +604,19 @@ const Toast = Swal.mixin({
       "autoWidth": true,
       "responsive": true,
     });
-
-
-
     $(function () {
-
       $("#rawsamples").hide();
       $("#processedsamples").hide();
       $("#submitbtn").hide();
-
-      $("#raw").click(function () {
-          
+      $("#raw").click(function () {          
         $("#rawsamples").show();
         $("#submitbtn").show();
         $("#processedsamples").hide();
-
             });
-
             $("#processed").click(function () {
-
-              $("#rawsamples").hide();
-      $("#processedsamples").show();
-      $("#submitbtn").show();
+            $("#rawsamples").hide();
+            $("#processedsamples").show();
+            $("#submitbtn").show();
               });
     });
 
@@ -738,7 +683,6 @@ const Toast = Swal.mixin({
   if ($('#serum').is(":checked") || $('#edta').is(":checked") ) {
     return true;
   }
-
   else{
     Toast.fire({
   icon: 'error',
@@ -746,9 +690,8 @@ const Toast = Swal.mixin({
   background: '#EBECEC',
   title: 'Samples Not Selected!'
   });
-            return false;
+    return false;
         }
-
   }
 
     </script>

@@ -72,13 +72,13 @@ if($_SESSION['role']=="DE"){
 $deletebtn="";
 }
 else{
-$deletebtn="<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#".$row['study_id']."'>
+$deletebtn="<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#dDash".$row['study_id']."'>
 <i class='fas fa-trash'>
 </i>
 Delete
 </a>
 
-<div class='modal fade' id='".$row['study_id']."'>
+<div class='modal fade' id='dDash".$row['study_id']."'>
     <div class='modal-dialog'>
       <div class='modal-content bg-danger'>
    

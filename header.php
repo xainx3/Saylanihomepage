@@ -88,7 +88,7 @@
     <?php      if($_SESSION['role']!="DE"){
 
 ?>
-         <li class="nav-item  <?php if ($thispage == 'departs' || $thispage == 'haema' || $thispage == 'mole' || $thispage == 'bio' ) {echo  "menu-is-opening menu-open"; } ?>">
+         <!-- <li class="nav-item  <?php if ($thispage == 'departs' || $thispage == 'haema' || $thispage == 'mole' || $thispage == 'bio' ) {echo  "menu-is-opening menu-open"; } ?>">
             <a href="#" class="nav-link <?php if ($thispage == 'departs' || $thispage == 'haema' || $thispage == 'mole' || $thispage == 'bio' ) {echo  "active"; } ?>">
             <i class="nav-icon far fa-building"></i></i>
               <p>
@@ -116,7 +116,7 @@
                 </a>
               </li>
             </ul>
-          </li>
+          </li> -->
 
           <li class="nav-item">
             <a href="storage.php" class="nav-link <?php if ($thispage == 'storage' ) {echo  "active"; } ?>">
