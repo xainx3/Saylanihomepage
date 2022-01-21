@@ -26,7 +26,7 @@ $sql=" UPDATE `samplesdata` SET `sample_status`='$selectedvalue' WHERE `sdid`='$
 
             $result1 = mysqli_query($conn, $sql1);
 
-
+            echo '<option value="0">Select Freezer</option>';
             while($row1 = mysqli_fetch_array($result1))  
             { 
             
@@ -38,10 +38,10 @@ $sql=" UPDATE `samplesdata` SET `sample_status`='$selectedvalue' WHERE `sdid`='$
              
              
              
-             if(isset($_GET['freezervalue1'])){
+             if(isset($_GET['freezershelf'])){
 
             
-                        $freezerselectedvalue=$_GET['freezervalue1']; 
+                        $freezerselectedvalue=$_GET['freezershelf']; 
                         
                         $sql1 = "SELECT * FROM `freezer` WHERE `freid`='$freezerselectedvalue'";
             
@@ -53,9 +53,9 @@ $sql=" UPDATE `samplesdata` SET `sample_status`='$selectedvalue' WHERE `sdid`='$
                         
                         
                            
-                           for($i=1;$i<=$row1["freezerrows"];$i++){
+                           for($i=1;$i<=$row1["num_of_shelves"];$i++){
 
-echo '<option value="'.$i.'" >Row-'.$i.'</option>';
+echo '<option value="'.$i.'" >Shelf-'.$i.'</option>';
 
                            }
                            
@@ -67,10 +67,10 @@ echo '<option value="'.$i.'" >Row-'.$i.'</option>';
                         
                     }  
 
-                    if(isset($_GET['freezervalue2'])){
+                    if(isset($_GET['freezerrack'])){
 
             
-                        $freezerselectedvalue=$_GET['freezervalue2']; 
+                        $freezerselectedvalue=$_GET['freezerrack']; 
                         
                         $sql1 = "SELECT * FROM `freezer` WHERE `freid`='$freezerselectedvalue'";
             
@@ -81,23 +81,57 @@ echo '<option value="'.$i.'" >Row-'.$i.'</option>';
                         { 
                            
                          
-                           for($i=1;$i<=$row1["freezercolumns"];$i++){
+                           for($i=1;$i<=$row1["num_of_racks"];$i++){
 
-                            echo '<option value="'.$i.'" >Column-'.$i.'</option>';
+                            echo '<option value="'.$i.'" >Rack-'.$i.'</option>';
                             
-                                                       }
-                           
-                           
-                           
+                                                       }                         
+                   }
+             }
 
-                       
-                        
-                        }
+
+             if(isset($_GET['freezerbox'])){
+
             
+                $freezerselectedvalue=$_GET['freezerbox']; 
+                
+                $sql1 = "SELECT * FROM `freezer` WHERE `freid`='$freezerselectedvalue'";
+    
+                $result1 = mysqli_query($conn, $sql1);
+    
+    
+                while($row1 = mysqli_fetch_array($result1))  
+                { 
+                   
+                 
+                   for($i=1;$i<=$row1["num_of_boxes"];$i++){
+
+                    echo '<option value="'.$i.'" >Box-'.$i.'</option>';
                     
-                        
-                        
-                                }
+                                               }                         
+           }
+     }
+     if(isset($_GET['boxposition'])){
+
+            
+        $freezerselectedvalue=$_GET['boxposition']; 
+        
+        $sql1 = "SELECT * FROM `freezer` WHERE `freid`='$freezerselectedvalue'";
+
+        $result1 = mysqli_query($conn, $sql1);
+
+
+        while($row1 = mysqli_fetch_array($result1))  
+        { 
+           
+         
+           for($i=1;$i<=$row1["num_of_positions"];$i++){
+
+            echo '<option value="'.$i.'" >'.$i.'</option>';
+            
+                                       }                         
+   }
+}
 
 
 

@@ -879,7 +879,105 @@ if($insert){
 
 
 
+
+
+
+
 }
+
+if(isset($_POST['addmoresamples'])){
+
+  echo '<script>alert("done")</script>';
+
+
+  if(isset($_POST['dnav'])){
+    $dnav=(int)$_POST['dnav'];  
+    }  
+  
+    else{
+      $dnav=0;
+    }
+  
+    if(isset($_POST['wholeblood'])){
+    $wholebloodv=(int)$_POST['wholebloodv'];
+    $wholebloodquantity=(int)$_POST['wholebloodquantity'];
+     }
+    
+    else{
+      $wholebloodv=0;
+    }
+  
+    if(isset($_POST['pbmc'])){
+    $pbmcv=(int)$_POST['pbmcv'];
+    $pbmcquantity=(int)$_POST['pbmcquantity'];
+   
+     }
+    
+    else{
+      $pbmcv=0;
+    }
+    if(isset($_POST['stool'])){
+    $stoolv=(int)$_POST['stoolv'];
+     }
+    
+    else{
+      $stoolv=0;
+    }
+  
+  
+    if($dnav>0){
+  
+  
+  for($i=1;$i<=$dnav;$i++){
+  
+    $sampleid=$studyid.'-D-'.$i;
+    $samplename='DNA-'.$i;
+    $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+  }
+  }
+  
+  
+  if($wholebloodv>0){
+    for($i=1;$i<=$wholebloodv;$i++){
+    
+      $sampleid=$studyid.'-WB-'.$i;
+      $samplename='WHOLE BLOOD-'.$i;
+      $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`,`sample_quantity`) VALUES ('$studyid','$sampleid','$samplename',' $wholebloodquantity')");
+    }
+    }
+  
+    if($pbmcv>0){
+   
+      for($i=1;$i<=$pbmcv;$i++){
+      
+        $sampleid=$studyid.'-PB-'.$i;
+        $samplename='PBMC-'.$i;
+        $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`,`sample_quantity`) VALUES ('$studyid','$sampleid','$samplename',' $pbmcquantity')");
+      }
+      }
+  
+      if($stoolv>0){
+        for($i=1;$i<=$stoolv;$i++){
+        
+          $sampleid=$studyid.'-ST-'.$i;
+          $samplename='STOOL-'.$i;
+          $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
+        }
+        }
+  
+        $statusMsg= "Toast.fire({
+          icon: 'success',
+          padding: '3em',  
+          background: '#EBECEC',
+          title: 'Samples Added Successfully.'
+          });";  
+  
+  
+  
+  
+  
+  
+  }
 
 if(isset($_POST['storesample'])){
 
@@ -889,20 +987,33 @@ if(isset($_POST['storesample'])){
   $sampleid=$_POST['sampleid'];
   $room=$_POST['roomselect'];
   $freezer=$_POST['freezer'];
-  $freezerrow=$_POST['frow'];
-  $freezercolumn=$_POST['fcolumn'];
+  $fshelf=$_POST['fshelf'];
+  $frack=$_POST['frack'];
+  $fbox=$_POST['fbox'];
+  $fposition=$_POST['fposition'];
+  $storage_quantity=$_POST['storage_quantity'];
+ 
+	$storecheckquery= "SELECT *FROM `samples_storage_location` WHERE `freezer_room`='$room' AND  `freezer`='$freezer' AND `freezer_shelf`='$fshelf' 
+  AND `freezer_rack`='$frack' AND `freezer_box`='$fbox' AND `freezer_box_position`='$fposition'";
   
+	$storecheckqueryresult= mysqli_query($conn, $storecheckquery); 
 
-  $sample_location=$room.'->'.$freezer.'->'.$freezerrow.'->'.$freezercolumn;
+	if(mysqli_num_rows($storecheckqueryresult)==0){
+ 
+   
+
+  $sample_location='Room-'.$room.'->Freezer-'.$freezer.'->Shelf-'.$fshelf.'->Rack-'. $frack.'->Box-'.$fbox.'->Position-'. $fposition;
   
   $query= "select *from `samples_storage_location` where `study_id`='$studyid' AND `sample_id`='$sampleid' ";
   $result= mysqli_query($conn, $query);
   
   if(mysqli_num_rows($result)>0){
 
-    $updatesamplelocation = $conn->query("UPDATE `samples_storage_location` SET `freezer_room`='$room',
-    `freezer`='$freezer',`freezer_rows`='$freezerrow',
-    `freezer_columns`='$freezercolumn',`location`='$sample_location' WHERE `study_id`='$studyid' AND `sample_id`='$sampleid'");
+   
+
+    $updatesamplelocation = $conn->query(" UPDATE `samples_storage_location` SET `freezer_room`='$room',
+    `freezer`='$freezer',`freezer_shelf`=' $fshelf',`freezer_rack`=' $frack',`freezer_box`='$fbox',`freezer_box_position`='$fposition',
+    `location`='$sample_location',`storage_quantity`='$storage_quantity' WHERE `study_id`='$studyid' AND `sample_id`='$sampleid'");
 
 
 
@@ -915,10 +1026,12 @@ if(isset($_POST['storesample'])){
   
   }
 else{
-  $insertsamplelocation = $conn->query("INSERT INTO `samples_storage_location`(`study_id`, `sample_id`, 
-  `freezer_room`, `freezer`, `freezer_rows`, `freezer_columns`, `location`) 
-  VALUES ('$studyid','$sampleid','$room','$freezer','$freezerrow',
-  '$freezercolumn','$sample_location')");
+
+  
+
+  $insertsamplelocation = $conn->query("INSERT INTO `samples_storage_location`(`study_id`, `sample_id`, `freezer_room`, `freezer`, `freezer_shelf`, `freezer_rack`, 
+  `freezer_box`, `freezer_box_position`, `location`, `storage_quantity`) VALUES ('$studyid','$sampleid','$room','$freezer',
+  '$fshelf', '$frack', '$fbox', '$fposition','$sample_location','$storage_quantity')");
 
   $samplestatusupdate = $conn->query("UPDATE `samplesdata` SET `sample_status`='4' WHERE `study_id`='$studyid' AND `sample_id`='$sampleid'"); 
   
@@ -934,7 +1047,27 @@ else{
   
 }
   
-  
+}
+else{
+
+
+  while($storecheckqueryresultrow = mysqli_fetch_array($storecheckqueryresult))  
+ 
+  { 
+
+
+
+    $storechecksampleid=$storecheckqueryresultrow['sample_id'];
+}
+
+  $statusMsg= "Toast.fire({
+    icon: 'error',
+    padding: '5em',  
+    background: '#EBECEC',
+    title: 'Sample ".$storechecksampleid." already stored at this position.'
+    });";  
+
+}
   
   }
 
@@ -986,16 +1119,6 @@ else{
  a.disabled:hover {
     cursor:not-allowed !important;
  }
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
 
 
 </style>
@@ -1055,154 +1178,7 @@ if(isset($_POST['childsubmit'])){
   echo '<script>alert("Member Added Successfully!")</script>';
 
 
-  // $childname=$_POST['childname'];
-  // $childedate=$_POST['childedate'];
-  // $childrdate=$_POST['childrdate'];
-  // $childage=$_POST['childage'];
-  // $childgender=$_POST['childgender'];
-  // $childcontact=$_POST['childcontact'];
-  
-  // if(isset($_POST['childedtav'])){
-  //   $childedtav=(int)$_POST['childedtav'];
-  //   $childgeltubev=(int)$_POST['childgeltubev'];
-  //   $childurinev=(int)$_POST['childurinev'];
-  //   }
-    
-  //   else{
-  //     $childedtav=0;
-  //   $childgeltubev=0;
-  //   $childurinev=0;
-  //   }
-  //   if(isset($_POST['childserumv'])){
-    
-  //   $childserumv=(int)$_POST['childserumv'];
-  //   $childplasmav=(int)$_POST['childplasmav'];
-  //   $childurinepv=(int)$_POST['childurinepv'];
-    
-  //   }
-    
-  //   else{
-  //     $childserumv=0;
-  //   $childplasmav=0;
-  //   $childurinep=0;
-  //   }
-    
-    
-    
-    
-  //   if($childedtav>0){
-  //     $childsampletype="RAW";
-    
-    
-  //   }
-    
-  //   if($schilderumv>0){
-  //     $childsampletype="PROCESSED";
-    
-    
-  //   }
-  
-  // if(!isset($_POST['childtemp'])){
-  
-  //   $childtemp='N/A';
-  // }
-  // else{
-  //   $childtemp=$_POST['childtemp'].'C';
-  // }
-  
-  // if(!isset($_POST['childcnic'])){
-  
-  //   $childcnic='N/A';
-  // }
-  // else{
-  //   $childcnic=$_POST['childcnic'];
-  // }
-  
-  
-  
-  // $childinsert = $conn->query("UPDATE `participantsinfocenter` SET `date_of_enrollment`='$childedate',
-  // `date_of_receiving`='$childrdate',`name`='$childname',`age`='$childage',`sex`='$childgender',`contact_number`='$childcontact',
-  // `temperature`='$childtemp' WHERE `study_id`='$childpatientid'");
-      
-  // if($childinsert){
-  
-  //   if($childedtav>0 || $childgeltubev>0 || $childurinev>0 || $childserumv>0 || $childplasmav>0 || $childurinepv>0){
-  
-  //     $delete= $conn->query("Delete from `samplesdata` WHERE `study_id`='$studyid'");
-  //   }
-  
-  
-  //   if($childedtav>0){
-  
-  
-  //     for($i=1;$i<=$edtav;$i++){
-      
-  //       $sampleid=$studyid.'-ED-'.$i;
-  //       $samplename='EDTA-'.$i;
-  //       $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
-  //     }
-  //     }
-      
-      
-  //     if($geltubev>0){
-  //       for($i=1;$i<=$geltubev;$i++){
-        
-  //         $sampleid=$studyid.'-GT-'.$i;
-  //         $samplename='GELTUBE-'.$i;
-  //         $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
-  //       }
-  //       }
-      
-  //       if($urinev>0){
-       
-  //         for($i=1;$i<=$urinev;$i++){
-          
-  //           $sampleid=$studyid.'-UR-'.$i;
-  //           $samplename='URINE-'.$i;
-  //           $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
-  //         }
-  //         }
-      
-  //         if($serumv>0){
-  //           for($i=1;$i<=$serumv;$i++){
-            
-  //             $sampleid=$studyid.'-S-'.$i;
-  //             $samplename='SERUM-'.$i;
-  //             $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
-  //           }
-  //           }
-      
-  //           if($plasmav>0){
-  //             for($i=1;$i<=$plasmav;$i++){
-              
-  //               $sampleid=$studyid.'-P-'.$i;
-  //               $samplename='PLASMA-'.$i;
-  //               $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
-  //             }
-  //             }
-      
-  //             if($urinepv>0){
-  //               for($i=1;$i<=$urinepv;$i++){
-                
-  //                 $sampleid=$studyid.'-UP-'.$i;
-  //                 $samplename='URINE-'.$i;
-  //                 $insert = $conn->query("INSERT INTO `samplesdata`(`study_id`, `sample_id`, `sample_name`) VALUES ('$studyid','$sampleid','$samplename')");
-  //               }
-  //               }
-      
-      
-                
-      
-   
-  //       $statusMsg= "Toast.fire({
-  //   icon: 'success',
-  //   padding: '3em',  
-  //   background: '#EBECEC',
-  //   title: ' Participant Updated Successfully.'
-  //   });";               
-      
-  // }
-  
+ 
   
   
   
@@ -1215,192 +1191,9 @@ if(isset($_POST['childsubmit'])){
 
 
 ?> 
-    <!-- Main content -->
-    <section class="content">
 
-      <!-- Default box -->
-      <div class="card">
-        <div class="card-header">
-  
-      
-         
-            <div class="card card-success">
-              <div class="card-header">
-                <h3 class="card-title">Details of <b> <i > <?php echo $name ?></i></b></h3>
-              </div>
-   
-
-
-<form method="POST" action="" enctype="multipart/form-data">
-                  
-
-                    <div class="card-body">
-                    <div class="row">
-
-                  <div class="form-group col-md-6">
-                      <label >MR. No</label>
-                      <input type="name" class="form-control bg-secondary"   name="mrno" required value="<?php echo $studyid ?>" readonly>
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="exampleInputEmail1">Name</label>
-                      <input type="name" class="form-control" id="exampleInputEmail1"  name="name" required value="<?php echo $name ?>">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="exampleInputEmail1">Date of Enrollment</label>
-                      <input type="date" class="form-control" id="endate"  name="edate" required  value="<?php echo date("Y-m-d", strtotime($dateofen)) ?>" max="<?php echo date("Y-m-d"); ?>">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="exampleInputEmail1">Date of Receiving</label>
-                      <input type="date" class="form-control" id="exampleInputEmail1"  name="rdate" required value="<?php echo date("Y-m-d", strtotime($dateofrec)) ?>" max="<?php echo date("Y-m-d"); ?>">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="exampleInputPassword1">Age</label>
-                      <input type="number" class="form-control" id="exampleInputPassword1"  name="age" required value="<?php echo $age ?>">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="exampleInputPassword1">Gender</label>
-                      <input type="name" class="form-control" id="exampleInputPassword1"  name="gender" required value="<?php echo $gender ?>">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label >Contact</label>
-                      <input type="name" class="form-control"   name="contact" required value="<?php echo   $contactnumber ?>">
-                    </div>
-  
-                    <div class="form-group col-md-6">
-                      <label >Temprature</label>
-                      <input type="number" class="form-control"  placeholder="Temprature of Participant" name="temp" value="<?php echo  preg_replace('/[^0-9]/', '',  $temp); ?>" required >
-                    </div>
-                    
-                    <div class="form-group col-md-6">
-                      <label >CNIC</label>
-                      <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="cnic"  value="<?php echo $cnic1 ?>">
-                    </div>
-                    
-                    
-
-
-                    </div>
-                    </div>
-
-                    <div class="card card-success">
-              <div class="card-header">
-                <h3 class="card-title">Want to Update Sample too?</i></b></h3>
-              </div>
-              </div>
-
-<div class="row text-center mb-5">
-
-<div class="col-md-6">
-        <input class="btn btn-primary  w-100" type="button" id="raw" value=" RAW"/>
-      
-        </div>
-        <div class="col-md-6">
-        <input type="button" class="btn btn-primary w-100" id="processed" value="PROCESSED"/>
-       
-        </div>
-
-        </div>
-
-
-                    <div id="rawsamples">
-<h3 class="text-center">RAW SAMPLES</h3>
-<hr>
-<div class="row text-center">
-
-<div class="col-md-4 ">
-<label for="edta">
-        <input type="checkbox" id="edta"  name="edta"/>
-        ETDA
-    </label>
-    <div id="dvedta" style="display: none">
-        <input type="number"   name="edtav" id="edtav"/>
-    </div>
-
-</div>
-
-<div class="col-md-4">
-    <label for="geltube">
-        <input type="checkbox" id="geltube" name="geltube"/>
-        GEL TUBE
-    </label>
-    <div id="dvgeltube" style="display: none">
-        <input type="number"    name="geltubev" id="geltubev"/>
-    </div>
-    </div>
-
-    <div class="col-md-4">
-    <label for="urine">
-        <input type="checkbox" id="urine" name="urine" />
-        URINE
-    </label>
-    <div id="dvurine" style="display: none">
-        <input type="number"    name="urinev" id="urinev"/>
-    </div>
-    </div>
-
-    </div>
-    </div>
-
-                    <div id="processedsamples">
-
-    <h3 class="text-center mt-5">PROCESSED SAMPLES</h3>
-    <hr />  
-
-<div class="row text-center">
-
-<div class="col-md-4">
-    <label for="serum">
-        <input type="checkbox" id="serum" name="serum" />
-      SERUM
-    </label>
-    <div id="dvserum" style="display: none">
-        <input type="number"    name="serumv" id="serumv"/>
-    </div>
-</div>
-
-<div class="col-md-4">
-    <label for="plasma">
-        <input type="checkbox" id="plasma" name="plasma"/>
-        PLASMA
-    </label>
-    <div id="dvplasma" style="display: none">
-        <input type="number"    name="plasmav" id="plasmav"/>
-    </div>
-</div>
-
-
-    <div class="col-md-4">
-    <label for="urines">
-        <input type="checkbox" id="urines" name="urinep"/>
-        URINE (Small Tubes)
-    </label>    
-    <div id="dvurines" style="display: none">
-        <input type="number"   name="urinepv" id="urinepv"/>
-    </div>
-    </div>
-    </div>
-</div>
-
-  
-
-
-
-                  <div class="form-group col-md-12 text-center mt-5">
-                      <input type="submit" class="btn btn-lg btn-primary" value="Update" name="update" >
-                    </div>
-
-
-                  </div>
-  
-                
-                 
-                </form>
-  
-
-            </div>
-       </div>
-
-    </section>
+    
+    
 
 
    <?php if($_SESSION['role']!="DE"){
@@ -1425,10 +1218,15 @@ if(isset($_POST['childsubmit'])){
                   <li class="nav-item">
                     <a class="nav-link" id="custom-tabs-four-settings-tab" data-toggle="pill" href="#custom-tabs-four-settings" role="tab" aria-controls="custom-tabs-four-settings" aria-selected="false">Storage</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-four-details-tab" data-toggle="pill" href="#custom-tabs-four-details" role="tab" aria-controls="custom-tabs-four-details" aria-selected="false">Update Participant's Details</a>
+                  </li>
                 </ul>
               </div>
               <div class="card-body">
                 <div class="tab-content" id="custom-tabs-four-tabContent">
+
+
                   <div class="tab-pane fade active show " id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
                   <table id="example1" class="table table-resposive table-bordered table-striped text-center">
       <thead>
@@ -1554,7 +1352,7 @@ Delete
       <div class="modal-content bg-danger">
    
         <div class="modal-body">
-          <p class="text-center">Are you sure you want to remove this Participant?</p>
+          <p class="text-center">Are you sure you want to remove this Sample?</p>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-outline-light" data-dismiss="modal">No</button>
@@ -1592,8 +1390,14 @@ Delete
                     </div>
                     <div class="form-group col-md-6">
                       <label for="exampleInputEmail1">Sample ID</label>
-                      <input type="name" class="form-control bg-secondary text-white" id="exampleInputEmail1"  name="sampleid" value="'.$sampleresultrow["sample_id"].'" readonly required >
+                      <input type="name" class="form-control bg-secondary text-white"   name="sampleid" value="'.$sampleresultrow["sample_id"].'" readonly required >
                     </div>
+
+                    <div class="form-group col-md-12">
+                    <label for="exampleInputEmail1">Storage Quantity</label>
+                    <input type="number" class="form-control"   name="storage_quantity"  required >
+                  </div>
+                    
                     <div class="form-group col-md-6">
                     <label for="exampleInputEmail1">Select Room</label>
 
@@ -1618,20 +1422,36 @@ echo' </select>
                     <div class="form-group col-md-6" id="freezerdiv">
                       <label for="exampleInputEmail1">Select Freezer</label>
                       <select class="form-control freezers" name="freezer" id="freezers">
-                      <option value="0">Select Freezer</option>
+                      
                     </select>
                     </div> 
                     
                     <div class="form-group col-md-6">
-                           <label for="exampleInputEmail1">Select Row Number</label>
-                           <select class="form-control rowselect" name="frow" id="rowselect">
+                           <label for="exampleInputEmail1">Select Shelf Number</label>
+                           <select class="form-control shelfselect" name="fshelf" id="shelfselect">
                            </select>
 
                            </div>
 
                            <div class="form-group col-md-6">
-                           <label for="exampleInputEmail1">Select Column Number</label>
-                           <select class="form-control columnselect" name="fcolumn" id="columnselect">
+                           <label for="exampleInputEmail1">Select Rack Number</label>
+                           <select class="form-control rackselect" name="frack" id="rackselect">
+                           
+                           </select>
+
+                           </div>
+
+                           <div class="form-group col-md-6">
+                           <label for="exampleInputEmail1">Select Box Number</label>
+                           <select class="form-control boxselect" name="fbox" id="boxselect">
+                           
+                           </select>
+
+                           </div>
+
+                           <div class="form-group col-md-6">
+                           <label for="exampleInputEmail1">Position In Box</label>
+                           <select class="form-control positionselect" name="fposition" id="positionselect">
                            
                            </select>
 
@@ -1655,10 +1475,91 @@ echo' </select>
 ';
 
 }
+
+
+
 ?> 
  </tbody>
     
-    </table>                     </div>
+    </table>                   
+  
+    <div class="text-center">
+<button type="submit" class="btn btn-success btn-block btn-lg" name="storesample" data-toggle="modal" data-target="#addsample">ADD SAMPLE</button>
+</div>
+<div class="modal fade" id="addsample">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content  bg-primary">
+   <h4 class="text-center">ADD MORE SAMPLES</h4>
+   <hr >
+
+   <div class="container">
+<form action="" method="POST">
+
+
+<div class="row text-center">
+
+
+
+<div class="col-md-3">
+    <label for="dna">
+        <input type="checkbox" id="dna" name="dna"/>
+        DNA
+    </label>
+    <div id="dvdna" style="display: none">
+        <input type="number"    name="dnav" id="dnav"/>
+
+    </div>
+    </div>
+
+    <div class="col-md-3">
+    <label for="wholeblood">
+        <input type="checkbox" id="wholeblood" name="wholeblood" />
+        WHOLE BLOOD
+    </label>
+    <div id="dvwholeblood" style="display: none">
+        <input type="number"    name="wholebloodv" id="wholebloodv"/>
+        <input type="text"    name="wholebloodquantity" id="wholebloodquantity" placeholder="Enter Quantity in ml"/>
+
+    </div>
+    </div>
+    
+    <div class="col-md-3">
+    <label for="pbmc">
+        <input type="checkbox" id="pbmc" name="pbmc" />
+        PBMC
+    </label>
+    <div id="dvpbmc" style="display: none">
+        <input type="number"    name="pbmcv" id="pbmcv"/>
+        <input type="text"    name="pbmcquantity" id="pbmcquantity" placeholder="Enter Quantity in ml"/>
+
+    </div>
+    </div>
+
+    <div class="col-md-3 ">
+<label for="stool">
+        <input type="checkbox" id="stool"  name="stool"/>
+       STOOL
+    </label>
+    <div id="dvstool" style="display: none">
+        <input type="number"   name="stoolv" id="stoolv"/>
+    </div>
+
+</div>
+
+    </div>
+
+<div class="text-center mb-3 mt-3">
+    <button type="submit" class="btn  bg-success" name="addmoresamples">
+     ADD
+                    </button>
+                    </div>
+    </form>
+    </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
                   <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
 
                   <table id="example1" class="table table-bordered table-striped text-center">
@@ -1943,22 +1844,17 @@ while($row1 = mysqli_fetch_array($result1))
                 </div>
                   <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
 <p class="text-center">No Record Found!</p>
-
 <div class="text-center">
 <a class="btn btn-primary btn-lg" href="#" data-toggle="modal" data-target="#familyadd">
-
     ADD MEMBER
 </a>
 </div>
-
 <div class="modal fade" id="familyadd">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content ">
-   
+      <div class="modal-content ">   
         <div class="modal-body">
         <form method="POST" action="" enctype="multipart/form-data" id="childregistrationform" class=" rounded" onsubmit="return validateForm()">
       <h1 class="text-center" style="margin: 0 0;">Enter Participant's Family Member Details</h1>
-
       <div class="card-body">
         <div class="row">
         <div class="form-group col-md-6">
@@ -2123,15 +2019,210 @@ while($row1 = mysqli_fetch_array($result1))
 
 
                 </div>
+                <div class="tab-pane fade" id="custom-tabs-four-details" role="tabpanel" aria-labelledby="custom-tabs-four-details-tab">
+
+                <section class="content" id="updatepdetails">
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+  
+
+      
+         
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Details of <b> <i > <?php echo $name ?></i></b></h3>
+              </div>
+   
+
+
+<form method="POST" action="" enctype="multipart/form-data">
+                  
+
+                    <div class="card-body">
+                    <div class="row">
+
+                  <div class="form-group col-md-6">
+                      <label >MR. No</label>
+                      <input type="name" class="form-control bg-secondary"   name="mrno" required value="<?php echo $studyid ?>" readonly>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="exampleInputEmail1">Name</label>
+                      <input type="name" class="form-control"   name="name" required value="<?php echo $name ?>">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="exampleInputEmail1">Date of Enrollment</label>
+                      <input type="date" class="form-control" id="endate"  name="edate" required  value="<?php echo date("Y-m-d", strtotime($dateofen)) ?>" max="<?php echo date("Y-m-d"); ?>">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="exampleInputEmail1">Date of Receiving</label>
+                      <input type="date" class="form-control"   name="rdate" required value="<?php echo date("Y-m-d", strtotime($dateofrec)) ?>" max="<?php echo date("Y-m-d"); ?>">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="exampleInputPassword1">Age</label>
+                      <input type="number" class="form-control" id="exampleInputPassword1"  name="age" required value="<?php echo $age ?>">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="exampleInputPassword1">Gender</label>
+                      <input type="name" class="form-control" id="exampleInputPassword1"  name="gender" required value="<?php echo $gender ?>">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label >Contact</label>
+                      <input type="name" class="form-control"   name="contact" required value="<?php echo   $contactnumber ?>">
+                    </div>
+  
+                    <div class="form-group col-md-6">
+                      <label >Temprature</label>
+                      <input type="number" class="form-control"  placeholder="Temprature of Participant" name="temp" value="<?php echo  preg_replace('/[^0-9]/', '',  $temp); ?>" required >
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                      <label >CNIC</label>
+                      <input type="number" class="form-control"     placeholder="XXXXX-XXXXXXX-X" name="cnic"  value="<?php echo $cnic1 ?>">
+                    </div>
+                    
+                    
+
+
+                    </div>
+                    </div>
+
+                    <!-- <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Want to Update Sample too?</i></b></h3>
+              </div>
+              </div> -->
+
+<!-- <div class="row text-center mb-5">
+
+<div class="col-md-6">
+        <input class="btn btn-primary  w-100" type="button" id="raw" value=" RAW"/>
+      
+        </div>
+        <div class="col-md-6">
+        <input type="button" class="btn btn-primary w-100" id="processed" value="PROCESSED"/>
+       
+        </div>
+
+        </div> -->
+
+
+                    <div id="rawsamples">
+<h3 class="text-center bg-success">RAW SAMPLES</h3>
+<hr>
+<div class="row text-center">
+
+<div class="col-md-4 ">
+<label for="edta">
+        <input type="checkbox" id="edta"  name="edta"/>
+        ETDA
+    </label>
+    <div id="dvedta" style="display: none">
+        <input type="number"   name="edtav" id="edtav"/>
+    </div>
+
+</div>
+
+<div class="col-md-4">
+    <label for="geltube">
+        <input type="checkbox" id="geltube" name="geltube"/>
+        GEL TUBE
+    </label>
+    <div id="dvgeltube" style="display: none">
+        <input type="number"    name="geltubev" id="geltubev"/>
+    </div>
+    </div>
+
+    <div class="col-md-4">
+    <label for="urine">
+        <input type="checkbox" id="urine" name="urine" />
+        URINE
+    </label>
+    <div id="dvurine" style="display: none">
+        <input type="number"    name="urinev" id="urinev"/>
+    </div>
+    </div>
+
+    </div>
+    </div>
+
+                    <div id="processedsamples">
+
+    <h3 class="text-center mt-5 bg-success">PROCESSED SAMPLES</h3>
+    <hr />  
+
+<div class="row text-center">
+
+<div class="col-md-4">
+    <label for="serum">
+        <input type="checkbox" id="serum" name="serum" />
+      SERUM
+    </label>
+    <div id="dvserum" style="display: none">
+        <input type="number"    name="serumv" id="serumv"/>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <label for="plasma">
+        <input type="checkbox" id="plasma" name="plasma"/>
+        PLASMA
+    </label>
+    <div id="dvplasma" style="display: none">
+        <input type="number"    name="plasmav" id="plasmav"/>
+    </div>
+</div>
+
+
+    <div class="col-md-4">
+    <label for="urines">
+        <input type="checkbox" id="urines" name="urinep"/>
+        URINE (Aliquots)
+    </label>    
+    <div id="dvurines" style="display: none">
+        <input type="number"   name="urinepv" id="urinepv"/>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+
+
+                  <div class="form-group col-md-12 text-center mt-5">
+                      <input type="submit" class="btn btn-lg btn-primary" value="Update" name="update" >
+                    </div>
+
+
+                  </div>
+  
+                
+                 
+                </form>
+  
+
+            </div>
+       </div>
+
+    </section>
+              </div>
+
+
+
                   <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
                   <table id="example1" class="table table-bordered table-striped text-center">
       <thead>
       <tr>
-        <th>BARCODE DATA</th>
-        <th>BARCODE IMAGE</th>
-        <th>NAME</th>
+        <th>SAMPLE ID</th>
+        <th>BARCODE</th>
+        <th>SAMPLE NAME</th>
         <th>DATE OF STORAGE</th>
-        <th>STORAGE LOCATION</th>        
+        <th>INITIAL QUANTITY</th>
+        <th>REMAINING QUANTITY</th>
+        <th>NUMBER OF DRAWS</th>
+        <th>STORAGE LOCATION</th>
+        <th>MANAGE</th>          
       </tr>
       </thead>
       <tbody >  
@@ -2152,7 +2243,31 @@ echo
       <td><img alt="barcode" src="barcode/barcode.php?size=40&text='.$slocationresultrow["sample_id"].'&print=true"/></td>
       <td>'.$slocationresultrow["sample_name"].'</td>
       <td>'.$slocationresultrow["date_of_storage"].'</td>
-      <td>'.$slocationresultrow["roomname"].'->'.$slocationresultrow["freezername"].'->R'.$slocationresultrow["freezer_rows"].'->C'.$slocationresultrow["freezer_columns"].'</td>
+      <td>'.$slocationresultrow["storage_quantity"].'ml</td>';
+
+      $slocation = "SELECT *FROM `sample_draw` WHERE  study_id='$patientid'";
+      $slocationresult = mysqli_query($conn, $slocation);
+      while($slocationresultrow = mysqli_fetch_array($slocationresult ))  
+      { 
+
+        
+
+
+      }
+
+ echo  '<td>
+      
+      
+      
+      </td>
+      <td>1</td>
+      <td>'.$slocationresultrow["roomname"].'<i class="fas fa-caret-right fa-fw"></i>'.$slocationresultrow["freezername"].'<i class="fas fa-caret-right fa-fw"></i>Shelf-'.$slocationresultrow["freezer_shelf"].'<i class="fas fa-caret-right fa-fw"></i>Rack-'.$slocationresultrow["freezer_rack"].'<i class="fas fa-caret-right fa-fw"></i>Box-'.$slocationresultrow["freezer_box"].'<i class="fas fa-caret-right fa-fw"></i>Position-'.$slocationresultrow["freezer_box_position"].'</td>
+     
+     <td>  <a class="btn btn-danger btn-sm" href="storedsample.php?sampleid='.$slocationresultrow["sample_id"].'">
+     <i class="fas fa-cogs"></i>
+     </i>
+     
+ </a></td>
       </tr>';
 
 
@@ -2171,6 +2286,11 @@ echo
       </tbody>
     
     </table>                        </div>
+
+
+    
+
+
                 </div>
               </div>
               <!-- /.card -->
@@ -2265,6 +2385,8 @@ $('.firstselect').on('change', function (e) {
     var valueSelected = this.value;
     var invoiceId=this.id;
     var dataString = 'value='+ valueSelected + '&invoiceid=' + invoiceId;
+    
+
     event.preventDefault();
 
     $.ajax({
@@ -2282,7 +2404,7 @@ $('.firstselect').on('change', function (e) {
         
     },
     error: function(xhr, textStatus, error) {
-        console.log(xhr.responseText);
+        // console.log(xhr.responseText);
         console.log(xhr.statusText);
         console.log(textStatus);
         console.log(error);
@@ -2295,7 +2417,11 @@ $('.firstselect').on('change', function (e) {
     var optionSelected = $("option:selected", this);
     var valueSelected = this.value;
     var dataString = 'roomvalue='+ valueSelected ;
-  
+    $('.freezers option').remove();
+    $('.shelfselect option').remove();
+    $('.rackselect option').remove();
+    $('.boxselect option').remove();
+    $('.positionselect option').remove();
    event.preventDefault();
   $.ajax({
     method: "GET",
@@ -2311,7 +2437,7 @@ $('.firstselect').on('change', function (e) {
         
     },
     error: function(xhr, textStatus, error) {
-        console.log(xhr.responseText);
+        // console.log(xhr.responseText);
         console.log(xhr.statusText);
         console.log(textStatus);
         console.log(error);
@@ -2323,7 +2449,9 @@ $('.firstselect').on('change', function (e) {
     $('.freezers').on('change', function (e) {
     var optionSelected = $("option:selected", this);
     var valueSelected = this.value;
-    var dataString = 'freezervalue1='+ valueSelected ;
+    var dataString = 'freezershelf='+ valueSelected ;
+
+    
     event.preventDefault();
     $.ajax({
     method: "GET",
@@ -2332,9 +2460,9 @@ $('.firstselect').on('change', function (e) {
       success: function(textStatus, status){
       console.log(textStatus);
       console.log(status);
-      $( ".rowselect" ).append(textStatus);
+      $( ".shelfselect" ).append(textStatus);
         
-      var dataString = 'freezervalue2='+ valueSelected ;
+      var dataString = 'freezerrack='+ valueSelected ;
 
     $.ajax({
       
@@ -2344,11 +2472,54 @@ $('.firstselect').on('change', function (e) {
       success: function(textStatus, status){
       console.log(textStatus);
       console.log(status);
-      $( ".columnselect" ).append(textStatus);
+      $( ".rackselect" ).append(textStatus);
+      var dataString = 'freezerbox='+ valueSelected ;
+
+    $.ajax({
+      
+    method: "GET",
+    url: "statusupdate.php",
+    data: dataString,
+      success: function(textStatus, status){
+      console.log(textStatus);
+      console.log(status);
+      $( ".boxselect" ).append(textStatus);
+
+      var dataString = 'boxposition='+ valueSelected ;
+
+$.ajax({
+  
+method: "GET",
+url: "statusupdate.php",
+data: dataString,
+  success: function(textStatus, status){
+  console.log(textStatus);
+  console.log(status);
+  $( ".positionselect" ).append(textStatus);
+    
+    },
+error: function(xhr, textStatus, error) {
+    // console.log(xhr.responseText);
+    console.log(xhr.statusText);
+    console.log(textStatus);
+    console.log(error);
+}
+});   
         
         },
     error: function(xhr, textStatus, error) {
-        console.log(xhr.responseText);
+        // console.log(xhr.responseText);
+        console.log(xhr.statusText);
+        console.log(textStatus);
+        console.log(error);
+    }
+  });   
+
+
+        
+        },
+    error: function(xhr, textStatus, error) {
+        // console.log(xhr.responseText);
         console.log(xhr.statusText);
         console.log(textStatus);
         console.log(error);
@@ -2359,7 +2530,7 @@ $('.firstselect').on('change', function (e) {
 
         },
     error: function(xhr, textStatus, error) {
-        console.log(xhr.responseText);
+        // console.log(xhr.responseText);
         console.log(xhr.statusText);
         console.log(textStatus);
         console.log(error);
@@ -2376,8 +2547,8 @@ $('.modal').on('hidden.bs.modal', function () {
 
 $(function () {
 
-$("#rawsamples").hide();
-$("#processedsamples").hide();
+// $("#rawsamples").hide();
+// $("#processedsamples").hide();
 $("#submitbtn").hide();
 
 $("#raw").click(function () {
@@ -2452,6 +2623,48 @@ $(function () {
               $("#urinepv").val('0');
           }
       });
+
+
+      $("#dna").click(function () {
+          if ($(this).is(":checked")) {
+              $("#dvdna").show();
+              $("#dnav").val('1');
+          } else {
+              $("#dvdna").hide();
+              $("#dnav").val('0');
+          }
+      });
+      $("#wholeblood").click(function () {
+          if ($(this).is(":checked")) {
+              $("#dvwholeblood").show();
+              $("#wholebloodv").val('1');
+          } else {
+              $("#dvwholeblood").hide();
+              $("#wholebloodv").val('0');
+          }
+      });
+      $("#pbmc").click(function () {
+          if ($(this).is(":checked")) {
+              $("#dvpbmc").show();
+              $("#pbmcv").val('1');
+          } else {
+              $("#dvpbmc").hide();
+              $("#pbmcv").val('0');
+          }
+      });
+      $("#stool").click(function () {
+          if ($(this).is(":checked")) {
+            
+              $("#dvstool").show();
+              $("#stoolv").val('1');
+          } else {
+              $("#dvstool").hide();
+              $("#stoolv").val('0');
+          }
+      });
+
+
+
   });
 
   function validateForm() {
@@ -2471,7 +2684,6 @@ title: 'Samples Not Selected!'
   }
 
 }
-
 
 
 $(function () {

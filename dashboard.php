@@ -224,6 +224,7 @@ if($_SESSION['role']!="DE"){
         <th>AGE</th>
         <th>GENDER</th>
         <th>CONTACT</th>
+        <th>DATE OF ENROLLMENT</th>
         <th class="nosort">Status</th>
         <th class="nosort">Options</th>
       </tr>
@@ -309,6 +310,7 @@ const Toast = Swal.mixin({
          
   $(document).ready(function(){
    $('#example1').DataTable({
+      "order": [[ 5, "desc" ]],
       'processing': true,
       'serverSide': true,
       'serverMethod': 'post',
@@ -326,6 +328,7 @@ const Toast = Swal.mixin({
          { data: 'age' },
          { data: 'sex' },
          { data: 'contact_number' },
+         { data: 'date_of_enrollment' },
          { data: 'status'},
          { data: 'optionbtns'},
       ]

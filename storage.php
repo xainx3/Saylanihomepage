@@ -14,7 +14,13 @@ if(!isset($_SESSION["id"])){
     $adminid=$_SESSION['id'];
   }
 
+  if(isset($_GET['patientid'])){
 
+    $patientid=$_GET['patientid'];
+
+    $studyid=$_GET['patientid'];
+    
+}
 
 if(isset($_POST['roomname'])){
 
@@ -37,15 +43,18 @@ if($insert){
 
 
   if(isset($_POST['addfreezer'])){
-
-    $frename=$_POST['frename'];
-    $frerows=$_POST['frerows'];
-    $frecolumns=$_POST['frecolumns'];
-    $roomid=$_POST['roomid'];
-
     
-    $insert = $conn->query("INSERT INTO `freezer`( `frid`, `freezername`, `freezerrows`, `freezercolumns`) VALUES 
-    ( '$roomid','$frename','$frerows','$frecolumns')");
+    $roomid=$_POST['roomid'];
+    $frename=$_POST['frename'];
+    $Shelvesnum=$_POST['Shelvesnum'];
+    $racksnum=$_POST['racksnum'];
+    $boxnum=$_POST['boxnum'];
+    $positionnum=$_POST['positionnum'];
+
+
+  
+    $insert = $conn->query(" INSERT INTO `freezer`( `frid`, `freezername`, `num_of_shelves`, `num_of_racks`, `num_of_boxes`, `num_of_positions`)
+    VALUES ('$roomid','$frename','$Shelvesnum','$racksnum','$boxnum','$positionnum')");
         
     if($insert){
           $statusMsg= "Toast.fire({
@@ -209,11 +218,12 @@ table td{
       <thead>
       <tr>
         <th>FREEZER ID</th>
+        <th>ROOM NAME</th>
         <th>FREEZER NAME</th>
-        <th>FREEZER ROWS</th>
-        <th>FREEZER COLUMNS</th>
-        <th>FREEZER LOCATION</th>
-        <th>STORAGE SPACE</th>        
+        <th>NUMBER OF SHELVES</th>
+        <th>NUMBER OF RACKS</th>
+        <th>NUMBER OF BOXES</th>
+        <th>TOTAL POSITIONS IN BOX</th>        
         <th>VIEW/EDIT DETAILS</th>
       </tr>
       </thead>
@@ -234,14 +244,16 @@ while($row1 = mysqli_fetch_array($result1))
    echo "<tr>
 
 
-<td>FR-".$row1["freid"]."</td>
-<td>".$row1["freezername"]."</td>
-<td>".$row1["freezerrows"]."</td>
-<td>".$row1["freezercolumns"]."</td>
+<td>F-".$row1["freid"]."</td>
 <td>
 ".$row1["roomname"]."
 </td>
-<td>".((intval($row1["freezercolumns"]))*(intval($row1["freezerrows"])))."</td>
+<td>".$row1["freezername"]."</td>
+<td>".$row1["num_of_shelves"]."</td>
+<td>".$row1["num_of_racks"]."</td>
+
+<td>".$row1["num_of_boxes"]."</td>
+<td>".$row1["num_of_positions"]."</td>
 
                       <td>    
 <a class='btn btn-info btn-sm' href='freezerdetails.php?freezerid=".$row1["freid"]."'>
@@ -328,7 +340,7 @@ while($row1 = mysqli_fetch_array($result1))
    echo "<tr>
 
 
-<td>FR-".$row1["frid"]."</td>
+<td>R-".$row1["frid"]."</td>
 <td>".$row1["roomname"]."</td>
 
 
@@ -419,7 +431,7 @@ while($row1 = mysqli_fetch_array($result1))
 <!-- ./wrapper -->
 <!-- Modal -->
 <div class="modal fade" id="freezer" tabindex="-1" role="dialog" aria-labelledby="freezer" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">ADD FREEZER</h5>
@@ -433,18 +445,6 @@ while($row1 = mysqli_fetch_array($result1))
               <form method="POST" action="" enctype="multipart/form-data" >
                 <div class="card-body">
                   <div class="row">
-                <div class="form-group col-md-12">
-                    <label >Freezer Name</label>
-                    <input type="name" class="form-control"  placeholder="Enter Freezer Name" name="frename" required >
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="exampleInputEmail1">Freezer Rows</label>
-                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Number of Rows" name="frerows" required >
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="exampleInputEmail1">Freezer Columns</label>
-                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Number of Columns" name="frecolumns" required >
-                  </div>
 
                   <div class="form-group col-md-12">
                   <label >Room Location</label>
@@ -469,6 +469,29 @@ while($row2 = mysqli_fetch_array($result2))
                          
                         </select>
                       </div>
+                <div class="form-group col-md-12">
+                    <label >Freezer Name</label>
+                    <input type="name" class="form-control"  placeholder="Enter Freezer Name" name="frename" required >
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label >Number of Shelves</label>
+                    <input type="name" class="form-control"  placeholder="Total Number of Shelves" name="Shelvesnum" required >
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label >Number of Racks in Shelf</label>
+                    <input type="name" class="form-control"  placeholder="Total Number of Racks in Shelf" name="racksnum" required >
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="exampleInputEmail1">Number of Boxes in Rack</label>
+                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Total Number of Boxes in Rack" name="boxnum" required >
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="exampleInputEmail1">Total Positions in Box</label>
+                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Number of Rows in Box" name="positionnum" required >
+                  </div>
+               
+
+                
                      
            
                   </div>

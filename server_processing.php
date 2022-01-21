@@ -7,7 +7,8 @@ if(!isset($_SESSION["id"])){
   }
 ## Database configuration
 include 'connection/connection.php';
-
+// $columnName='date_of_enrollment';
+// $columnSortOrder='DESC';
 ## Read value
 $draw = $_POST['draw'];
 $row = $_POST['start'];
@@ -70,6 +71,8 @@ while ($row = mysqli_fetch_assoc($empRecords)) {
 
 if($_SESSION['role']=="DE"){
 $deletebtn="";
+
+$contactno="**********";
 }
 else{
 $deletebtn="<a class='btn btn-danger btn-sm' href='#' data-toggle='modal' data-target='#dDash".$row['study_id']."'>
@@ -102,6 +105,8 @@ Delete
     </div>
     <!-- /.modal-dialog -->
   </div>";
+
+  $contactno=$row['contact_number'];
 }
 
 
@@ -112,7 +117,8 @@ Delete
       "name"=>$row['name'],
       "age"=>$row['age'],
       "sex"=>$row['sex'],
-      "contact_number"=>$row['contact_number'],
+      "contact_number"=>$contactno,
+      "date_of_enrollment"=>$row["date_of_enrollment"],
       "status"=>$selectop,
     "optionbtns"=>"<a class='btn btn-info btn-sm' href='patientdetails.php?patientid=".$row['study_id']."'>
     <i class='fas fa-pencil-alt'>

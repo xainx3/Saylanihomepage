@@ -351,7 +351,7 @@ echo mysqli_error($conn);
 </div>
 
 
-<h4>Do you have raw samples or processed samples?</h4>
+<!-- <h4>Do you have raw samples or processed samples?</h4>
 
 <div class="row text-center mb-5">
 
@@ -364,7 +364,7 @@ echo mysqli_error($conn);
        
         </div>
 
-        </div>
+        </div> -->
 
 <div id="rawsamples">
 <h3 class="text-center">RAW SAMPLES</h3>
@@ -395,7 +395,7 @@ echo mysqli_error($conn);
     <div class="col-md-4">
     <label for="urine">
         <input type="checkbox" id="urine" name="urine" />
-        URINE
+        URINE (Container)
     </label>
     <div id="dvurine" style="display: none">
         <input type="number"    name="urinev" id="urinev"/>
@@ -436,7 +436,7 @@ echo mysqli_error($conn);
     <div class="col-md-4">
     <label for="urines">
         <input type="checkbox" id="urines" name="urinep"/>
-        URINE (Small Tubes)
+        URINE (Aliquots)
     </label>    
     <div id="dvurines" style="display: none">
         <input type="number"   name="urinepv" id="urinepv"/>
@@ -475,9 +475,7 @@ echo mysqli_error($conn);
         <th>DATE OF RECEIVING</th>
         <th>AGE</th>
         <th>GENDER</th>
-        <th>CONTACT</th>
         <th>TEMPRATURE</th>
-        <th>CNIC</th>
         <th>VIEW</th>
       </tr>
       </thead>
@@ -508,9 +506,7 @@ echo "<tr>
 <td>".$row1['date_of_receiving']."</td>
 <td>".$row1['age']."</td>
 <td>".$row1['sex']."</td>
-<td>".$row1['contact_number']."</td>
 <td>".$row1['temperature']."</td>
-<td>".$row1['cnic']."</td>
 <td><a class='btn btn-info btn-sm' href='patientdetails.php?patientid=".$row1['study_id']."'>
 <i class='fas fa-pencil-alt'>
 </i>
@@ -605,9 +601,9 @@ if ( window.history.replaceState ) {
       "responsive": true,
     });
     $(function () {
-      $("#rawsamples").hide();
-      $("#processedsamples").hide();
-      $("#submitbtn").hide();
+      // $("#rawsamples").hide();
+      // $("#processedsamples").hide();
+      // $("#submitbtn").hide();
       $("#raw").click(function () {          
         $("#rawsamples").show();
         $("#submitbtn").show();

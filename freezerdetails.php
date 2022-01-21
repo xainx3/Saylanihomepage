@@ -27,13 +27,17 @@ if(!isset($_GET['freezerid'])){
 if(isset($_POST['updatefreezer'])){
 
     $frename=$_POST['frename'];
-    $frerows=$_POST['frerows'];
-    $frecolumns=$_POST['frecolumns'];
+    $num_of_shelves=$_POST['num_of_shelves'];
+    $num_of_racks=$_POST['num_of_racks'];
     $roomid=$_POST['roomid'];
+    $num_of_boxes=$_POST['num_of_boxes'];
+    $num_of_positions=$_POST['num_of_positions'];
     
     
-    $update = $conn->query("UPDATE `freezer` SET `frid`='$roomid',`freezername`='$frename',`freezerrows`='$frerows',
-    `freezercolumns`='$frecolumns' WHERE `freid`='$freezerid'");
+    
+
+    $update = $conn->query("UPDATE `freezer` SET `frid`='$roomid',`freezername`='$frename',`num_of_shelves`='$num_of_shelves',`num_of_racks`='$num_of_racks',`num_of_boxes`='$num_of_boxes'
+    ,`num_of_positions`='$num_of_positions' WHERE `freid`='$freezerid'");
         
     if($update){
           $statusMsg= "Toast.fire({
@@ -122,74 +126,63 @@ while($row1 = mysqli_fetch_array($result1))
     $freid=$row1['freid'];  
     $frid=$row1['frid'];
     $freezername=$row1['freezername'];
-    $frows=$row1['freezerrows'];
-    $fcolumns=$row1['freezercolumns'];
-
+    $num_of_shelves=$row1["num_of_shelves"];
+    $num_of_racks=$row1["num_of_racks"];
+    $num_of_boxes=$row1["num_of_boxes"];
+    $num_of_positions=$row1["num_of_positions"];
 }
-
-
-?> 
-    <!-- Main content -->
+?>
     <section class="content">
-
-      <!-- Default box -->
       <div class="card">
         <div class="card-header">
-  
-      
-         
-            <div class="card card-success">
+              <div class="card card-success">
               <div class="card-header">
                 <h3 class="card-title">Details of <b> <i > <?php echo $freezername ?></i></b></h3>
               </div>
-   
+   <form method="POST" action="" enctype="multipart/form-data" >
 
-
-              <form method="POST" action="" enctype="multipart/form-data" >
                 <div class="card-body">
                   <div class="row">
-                <div class="form-group col-md-12">
-                    <label >Freezer Name</label>
-                    <input type="name" class="form-control"  placeholder="Enter Freezer Name" name="frename" required value="<?php echo $freezername  ?>">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="exampleInputEmail1">Freezer Rows</label>
-                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Number of Rows" name="frerows"  required value="<?php echo $frows  ?>">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="exampleInputEmail1">Freezer Columns</label>
-                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Number of Columns" name="frecolumns" required value="<?php echo $fcolumns  ?>">
-                  </div>
 
-                  <div class="form-group col-md-12">
-                  <label >Room Location</label>
-
-                      
+                  <div class="form-group col-md-6">
+                  <label >Room Location</label>                      
                         <select class="form-control" name="roomid">
                         <?php
-
 $sql2 = "SELECT * FROM `freezerroom`";
- 
- 
 $result2 = mysqli_query($conn, $sql2);
-
-
 while($row2 = mysqli_fetch_array($result2))  
 { 
     if($frid==$row2["frid"]){
-        echo '<option selected value="'.$row2["frid"].'">'.$row2["roomname"].'</option>';
-
+        echo '<option selected value="'.$row2["frid"].'">'.$row2["roomname"].'</option>';                          
     }
     else{
  echo '<option value="'.$row2["frid"].'">'.$row2["roomname"].'</option>';
 }
 }
-
-?>
-                         
+?>                         
                         </select>
                       </div>
-                     
+                <div class="form-group col-md-6">
+                    <label >Freezer Name</label>
+                    <input type="name" class="form-control"  placeholder="Enter Freezer Name" name="frename" required value="<?php echo $freezername  ?>">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="exampleInputEmail1">Number of Shelves</label>
+                    <input type="number" class="form-control"  placeholder="Enter Number of Shelves" name="num_of_shelves"  required value="<?php echo $num_of_shelves  ?>">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="exampleInputEmail1">Number of Racks</label>
+                    <input type="number" class="form-control"  placeholder="Enter Number of Racks" name="num_of_racks" required value="<?php echo $num_of_racks  ?>">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="exampleInputEmail1">Number of Boxes</label>
+                    <input type="number" class="form-control"  placeholder="Enter Number of Boxes" name="num_of_boxes" required value="<?php echo $num_of_boxes  ?>">
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="exampleInputEmail1">Number of Positions In Box</label>
+                    <input type="number" class="form-control"  placeholder="Enter Number of Positions in Box" name="num_of_positions" required value="<?php echo $num_of_positions  ?>">
+                  </div>                    
            
                   </div>
  
