@@ -35,8 +35,7 @@ if(!isset($_SESSION["id"])){
     }
 
    
-    $totalpart= "SELECT *FROM `participantsinfocenter`";
- 
+    $totalpart= "SELECT *FROM `participantsinfocenter`"; 
  
     $totalpartnum = mysqli_query($conn,  $totalpart);
 
@@ -263,18 +262,10 @@ if($_SESSION['role']!="DE"){
    
   </footer>
 </div>
-<!-- ./wrapper -->
 
 
 
 
-
-
-
-      <!-- MODALS END -->
-
-
-<
 
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->

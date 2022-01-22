@@ -874,21 +874,9 @@ if($insert){
   });";               
     
 }
-
-
-
-
-
-
-
-
-
 }
 
 if(isset($_POST['addmoresamples'])){
-
-  echo '<script>alert("done")</script>';
-
 
   if(isset($_POST['dnav'])){
     $dnav=(int)$_POST['dnav'];  
@@ -1097,6 +1085,48 @@ else{
     
     }
 
+if(isset($_POST['runtest'])){
+
+  $sampleid=$_POST['sdid'];
+  $teststoperform = $_POST['testselect'];
+
+
+  foreach($teststoperform as $test)
+  {
+      echo $test."<br>";
+
+
+      if($test=='CBC'){
+
+
+      }
+
+      if($test=='LIPID'){
+
+        
+      }
+
+      if($test=='HBA'){
+
+        
+      }
+
+      if($test=='UMA'){
+
+        
+      }
+      
+      if($test=='DNA'){
+
+        
+      }
+      // $query = "INSERT INTO demo (name) VALUES ('$test')";
+      // $query_run = mysqli_query($con, $query);
+  }
+  
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -1115,6 +1145,9 @@ else{
   <link rel="stylesheet" href="plugins/toastr/toastr.min.css">
 
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.css" rel="stylesheet" />
+
 <style>
  a.disabled:hover {
     cursor:not-allowed !important;
@@ -1236,7 +1269,7 @@ if(isset($_POST['childsubmit'])){
         <th>NAME</th>
         <th>DATE OF EXTRACTION</th>
         <th>STATUS</th>
-        <th>RUN TESTS</th>
+        <th>TESTS</th>
         <th>OPTIONS</th>
       </tr>
       </thead>
@@ -1315,18 +1348,26 @@ echo' </select>
 </td>
 
 <td>
+
+<form action="" method="POST">
+<input type="hidden" value="'.$sampleresultrow["sample_id"].'" name="sdid">
+
 <div class="form-group ">
 
- <select class="form-control bg-primary" name="testselect">
- <option value="0">Select Test to Perform</option>
+<select class="multiselect" name="testselect[]" required>
+<option value="">Select Tests to Perform</option>
 <option value="CBC">CBC</option>
-<option value="Lipid Profile">Lipid Profile</option>
-<option value="hba1c">HbA1c</option>
-<option value="uma">UMA</option>
-<option value="dna">DNA Extraction</option>
+<option value="LIPID">Lipid Profile</option>
+<option value="HBA">HbA1c</option>
+<option value="UMA">UMA</option>
+<option value="DNA">DNA Extraction</option>
  </select>
  </div>
-
+ <button type="submit" class="btn btn-info btn-sm" name="runtest">
+ <i class="nav-icon fas fa-arrow-circle-right"></i>
+     Run
+ </button>
+ </form>
 </td>
 <td>  
 
@@ -2236,31 +2277,51 @@ while($row1 = mysqli_fetch_array($result1))
  
  while($slocationresultrow = mysqli_fetch_array($slocationresult ))  
  { 
-
+  $drawsampleid=$slocationresultrow["sample_id"];
 echo 
       '<tr>
       <td>'.$slocationresultrow["sample_id"].' </td>
       <td><img alt="barcode" src="barcode/barcode.php?size=40&text='.$slocationresultrow["sample_id"].'&print=true"/></td>
       <td>'.$slocationresultrow["sample_name"].'</td>
       <td>'.$slocationresultrow["date_of_storage"].'</td>
-      <td>'.$slocationresultrow["storage_quantity"].'ml</td>';
+      <td>'.$slocationresultrow["storage_quantity"].' ml</td>';
 
-      $slocation = "SELECT *FROM `sample_draw` WHERE  study_id='$patientid'";
-      $slocationresult = mysqli_query($conn, $slocation);
-      while($slocationresultrow = mysqli_fetch_array($slocationresult ))  
-      { 
+      // $draw = "SELECT SUM(draw_quantity) AS `totaldrawn` FROM `sample_draw` WHERE `sample_id`='$drawsampleid'";
+//             $draw = "SELECT *FROM `sample_draw` WHERE `sample_id`='$drawsampleid'";
 
-        
+//       $drawresult= mysqli_query($conn, $draw); 
+//       if(mysqli_num_rows($drawresult)>0){
+//         $drawresultarray= mysqli_fetch_assoc($drawresult);
+// 		    $totaldrawquantity=(int)$drawresultarray['totaldrawn'];
+//         $initialstorage=(int)$slocationresultrow["storage_quantity"];
+//       $drawntimes=mysqli_num_rows($drawresult);
+//       }
+// else{
+//   $drawntimes=0;
+// }
 
 
-      }
+$draw = "SELECT *FROM `sample_draw` WHERE `sample_id`='$drawsampleid'"; 
 
- echo  '<td>
+$drawresult = mysqli_query($conn, $draw);
+
+$totaldrawquantity=0;
+$initialstorage=(int)$slocationresultrow["storage_quantity"];
+$drawntimes=mysqli_num_rows($drawresult);
+while($drawresultarray = mysqli_fetch_array($drawresult))  
+{ 
+  $totaldrawquantity+=(int)$drawresultarray['draw_quantity'];
+
+}
+// $test1=(int)$totaldrawquantity;
+// $test3=(int)$initialstorage;
+
+ echo  '<td>      
+ 
+ '.((int)$initialstorage-(int)$totaldrawquantity).'
       
-      
-      
-      </td>
-      <td>1</td>
+      ml</td>
+      <td>'.$drawntimes.'</td>
       <td>'.$slocationresultrow["roomname"].'<i class="fas fa-caret-right fa-fw"></i>'.$slocationresultrow["freezername"].'<i class="fas fa-caret-right fa-fw"></i>Shelf-'.$slocationresultrow["freezer_shelf"].'<i class="fas fa-caret-right fa-fw"></i>Rack-'.$slocationresultrow["freezer_rack"].'<i class="fas fa-caret-right fa-fw"></i>Box-'.$slocationresultrow["freezer_box"].'<i class="fas fa-caret-right fa-fw"></i>Position-'.$slocationresultrow["freezer_box_position"].'</td>
      
      <td>  <a class="btn btn-danger btn-sm" href="storedsample.php?sampleid='.$slocationresultrow["sample_id"].'">
@@ -2332,7 +2393,7 @@ echo
 <script src="dist/js/demo.js"></script>
 <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="plugins/toastr/toastr.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js"></script>
 <script>
    
    const Toast = Swal.mixin({
@@ -2784,6 +2845,10 @@ title: 'Samples Not Selected!'
 
 }
 
+
+            $(".multiselect").selectize({
+  maxItems: 100,
+});
 </script>
 </body>
 </html>
